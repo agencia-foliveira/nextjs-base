@@ -19,6 +19,7 @@ You provide accurate, factual, thoughtful answers, and are a genius at reasoning
 - Only write code that is necessary to complete the task.
 - Rewrite the complete code only if necessary.
 - Update relevant tests or create new tests if necessary.
+- Do not add react import in any file.
 
 ## Naming Conventions
 - Use lowercase with dashes for directories (e.g., components/auth-wizard).
