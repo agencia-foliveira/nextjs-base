@@ -1,43 +1,13 @@
-import { HttpStatusCode } from 'axios';
-import { jwtDecode } from 'jwt-decode';
-import type { AuthOptions, User } from 'next-auth';
+import { PrismaAdapter } from '@next-auth/prisma-adapter';
+import bcrypt from 'bcryptjs';
+import type { AuthOptions } from 'next-auth';
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-
-interface UserWithToken extends User {
-  token: string;
-}
-
-const handleLoginFromApi = async (email?: string, password?: string) => {
-  const body = { email, password };
-  const mainUrl = `${process.env.NEXT_SERVER_API_URL}/auth/login`;
-
-  try {
-    const response = await fetch(mainUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body),
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      const error = new Error(
-        errorData.message || errorData.description || 'Error on requesting login from API'
-      );
-      (error as any).status = response.status || HttpStatusCode.InternalServerError;
-      throw error;
-    }
-
-    return await response.json();
-  } catch (error) {
-    console.error('[AUTH] Error in authorize:', error);
-    throw error;
-  }
-};
+import { ONE_DAY_IN_SECONDS, THIRTY_MINUTES_IN_SECONDS } from '@/constants';
+import prisma from '@/lib/prisma';
 
 const authOptions: AuthOptions = {
+  adapter: PrismaAdapter(prisma),
   providers: [
     CredentialsProvider({
       name: 'credentials',
@@ -45,52 +15,85 @@ const authOptions: AuthOptions = {
         email: { label: 'email', type: 'text' },
         password: { label: 'password', type: 'password' },
       },
-      authorize: async (credentials) => {
-        try {
-          const userWithToken = await handleLoginFromApi(credentials?.email, credentials?.password);
-
-          return userWithToken || null;
-        } catch (error: any) {
-          console.error('[AUTH] Error in authorize:', error);
-
-          throw error;
+      authorize: async (credentials, req) => {
+        if (!credentials?.email || !credentials?.password) {
+          throw new Error('Missing email or password');
         }
+
+        // 1. Buscar usuário
+        const user = await prisma.user.findUnique({
+          where: { email: credentials.email },
+        });
+
+        if (!user || !user.hashedPassword) {
+          throw new Error('Invalid credentials');
+        }
+
+        // TODO: Verificar lockout (ex: failedAttempts, lockedUntil)
+        // TODO: Verificar se usuário não foi soft-deleted (deletedAt)
+
+        // 2. Verificar senha
+        const isValid = await bcrypt.compare(credentials.password, user.hashedPassword);
+
+        if (!isValid) {
+          // Opcional: registrar SecurityIncident
+          await prisma.securityIncident.create({
+            data: {
+              userId: user.id,
+              type: 'FAILED_LOGIN',
+              details: `Failed login from IP ${req?.headers?.['x-forwarded-for'] || 'unknown'}`,
+            },
+          });
+          throw new Error('Invalid credentials');
+        }
+
+        // TODO: Verificar 2FA (se isTwoFactorEnabled === true)
+        // - Se habilitado, exigir código TOTP antes de logar
+
+        // 3. Registrar LoginActivity
+        await prisma.loginActivity.create({
+          data: {
+            userId: user.id,
+            ip: (req?.headers?.['x-forwarded-for'] as string) || 'unknown',
+            device: req?.headers?.['user-agent'] || 'unknown',
+          },
+        });
+
+        // 4. Retornar usuário sem senha
+        return {
+          id: user.id,
+          email: user.email,
+          role: user.role,
+          name: user.email, // ou outro campo se existir
+        };
       },
     }),
   ],
+  session: {
+    strategy: 'jwt',
+    maxAge: ONE_DAY_IN_SECONDS,
+    updateAge: THIRTY_MINUTES_IN_SECONDS,
+  },
   callbacks: {
-    jwt: async ({ token, user, trigger, session }) => {
+    async jwt({ token, user }) {
       if (user) {
-        const userWithToken = user as UserWithToken;
-        const userToken = jwtDecode(userWithToken.token) as typeof token.user;
-
-        token.id = userWithToken.id;
-        token.token = userWithToken.token;
-        token.user = userToken;
-      }
-
-      if (trigger === 'update' && session?.info) {
-        token.user = { ...token.user, ...session.info };
+        token.id = user.id;
+        token.role = (user as any).role;
       }
       return token;
     },
-    session: ({ session, token }) => {
-      if (token) {
-        session.token = token.token as string;
-        session.user = token.user;
+    async session({ session, token }) {
+      if (session.user) {
+        session.user.id = token.id as string;
+        session.user.role = token.role as string;
       }
       return session;
-    },
-    redirect: async ({ url, baseUrl }) => {
-      return url.startsWith(baseUrl) ? url : baseUrl;
     },
   },
   secret: process.env.NEXTAUTH_SECRET,
   pages: {
-    signIn: '/',
-  },
-  jwt: {
-    secret: process.env.NEXTAUTH_SECRET,
+    signIn: '/sign-in',
+    error: '/sign-in?error=invalid_credentials',
   },
 };
 
