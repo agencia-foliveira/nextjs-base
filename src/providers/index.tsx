@@ -1,5 +1,6 @@
-import { CustomClerkProvider } from './CustomClerkProvider';
+'use client';
+import { AuthProvider } from '@/features/auth/context/AuthContext';
 
 export function Providers({ children }: { children: React.ReactNode }) {
-  return <CustomClerkProvider>{children}</CustomClerkProvider>;
+  return <AuthProvider>{children}</AuthProvider>;
 }

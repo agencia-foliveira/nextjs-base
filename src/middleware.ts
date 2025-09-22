@@ -1,28 +1,29 @@
-import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
+import { type NextRequest, NextResponse } from 'next/server';
+import { getToken } from 'next-auth/jwt';
+import { AUTH_ROUTES, canAccessRoute, isPrivateRoute } from './lib/routes';
 
-// Definir rotas protegidas
-const isProtectedRoute = createRouteMatcher(['/dashboard(.*)', '/profile(.*)', '/admin(.*)']);
+const secret = process.env.NEXTAUTH_SECRET;
 
-// Definir rotas públicas (opcional)
-// const isPublicRoute = createRouteMatcher([
-//   '/',
-//   '/sign-in(.*)',
-//   '/sign-up(.*)',
-//   '/about',
-// ]);
+export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+  const token = await getToken({ req: request, secret });
 
-export default clerkMiddleware(async (auth, req) => {
-  // Proteger rotas definidas
-  if (isProtectedRoute(req)) {
-    await auth.protect();
+  // Redirect root to sign-in page
+  // if (pathname === '/') {
+  //   return NextResponse.redirect(new URL(AUTH_ROUTES['sign-in'].path, request.url));
+  // }
+
+  if (token) {
+    const { user } = token;
+
+    if (!canAccessRoute(user.role, pathname)) {
+      return NextResponse.redirect(new URL('/forbidden', request.url));
+    }
   }
-});
 
-export const config = {
-  matcher: [
-    // Pular arquivos Next.js internos e arquivos estáticos
-    '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
-    // Sempre executar para rotas da API
-    '/(api|trpc)(.*)',
-  ],
-};
+  if (!token && isPrivateRoute(pathname)) {
+    return NextResponse.redirect(new URL(AUTH_ROUTES['sign-in'].path, request.url));
+  }
+
+  return NextResponse.next();
+}

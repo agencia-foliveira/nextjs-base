@@ -1,0 +1,24 @@
+import type { PERMISSIONS } from './auth.constants';
+
+export type User = {
+  id: string;
+  email: string;
+  name: string;
+  role: UserRoles;
+};
+
+export enum UserRoles {
+  ADMIN = 'admin',
+  USER = 'user',
+  GUEST = 'guest',
+}
+
+export type PermissionKeys<T> = {
+  [K in keyof T]: T[K] extends Array<any> // se for array, para aqui
+    ? Extract<K, string>
+    : T[K] extends object // se for objeto, continua a recursão
+      ? `${Extract<K, string>}.${PermissionKeys<T[K]>}`
+      : Extract<K, string>;
+}[keyof T];
+
+export type PermissionPath = PermissionKeys<typeof PERMISSIONS>;
