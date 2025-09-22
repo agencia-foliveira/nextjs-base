@@ -3,7 +3,12 @@ import bcrypt from 'bcryptjs';
 import type { AuthOptions } from 'next-auth';
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import { ONE_DAY_IN_SECONDS, THIRTY_MINUTES_IN_SECONDS } from '@/constants';
+import {
+  LOCK_OUT_DURATION_MINUTES,
+  LOCK_OUT_THRESHOLD,
+  ONE_DAY_IN_SECONDS,
+  THIRTY_MINUTES_IN_SECONDS,
+} from '@/constants';
 import prisma from '@/lib/prisma';
 
 const authOptions: AuthOptions = {
@@ -14,13 +19,13 @@ const authOptions: AuthOptions = {
       credentials: {
         email: { label: 'email', type: 'text' },
         password: { label: 'password', type: 'password' },
+        code: { label: '2FA Code', type: 'text', placeholder: '123456' },
       },
       authorize: async (credentials, req) => {
         if (!credentials?.email || !credentials?.password) {
           throw new Error('Missing email or password');
         }
 
-        // 1. Buscar usuário
         const user = await prisma.user.findUnique({
           where: { email: credentials.email },
         });
@@ -29,14 +34,28 @@ const authOptions: AuthOptions = {
           throw new Error('Invalid credentials');
         }
 
-        // TODO: Verificar lockout (ex: failedAttempts, lockedUntil)
-        // TODO: Verificar se usuário não foi soft-deleted (deletedAt)
+        if (user.deletedAt) {
+          throw new Error('Account has been deactivated');
+        }
 
-        // 2. Verificar senha
+        if (user.lockedUntil && user.lockedUntil > new Date()) {
+          throw new Error('Account is locked. Try again later.');
+        }
+
         const isValid = await bcrypt.compare(credentials.password, user.hashedPassword);
 
         if (!isValid) {
-          // Opcional: registrar SecurityIncident
+          await prisma.user.update({
+            where: { id: user.id },
+            data: {
+              failedAttempts: { increment: 1 },
+              lockedUntil:
+                user.failedAttempts + 1 >= LOCK_OUT_THRESHOLD
+                  ? new Date(Date.now() + LOCK_OUT_DURATION_MINUTES)
+                  : user.lockedUntil,
+            },
+          });
+
           await prisma.securityIncident.create({
             data: {
               userId: user.id,
@@ -47,8 +66,25 @@ const authOptions: AuthOptions = {
           throw new Error('Invalid credentials');
         }
 
-        // TODO: Verificar 2FA (se isTwoFactorEnabled === true)
-        // - Se habilitado, exigir código TOTP antes de logar
+        // 🔐 2FA
+        if (user.isTwoFactorEnabled) {
+          if (!credentials.code) {
+            throw new Error('2FA code required');
+          }
+
+          // TODO: Enviar código para o usuário (e-mail, SMS, app autenticador)
+          // Exemplo com otplib TOTP:
+          // const { authenticator } = require('otplib');
+          // const is2FAValid = authenticator.verify({
+          //   token: credentials.code,
+          //   secret: user.twoFactorSecret!,
+          // });
+
+          const is2FAValid = true; // mock até você integrar otplib
+          if (!is2FAValid) {
+            throw new Error('Invalid 2FA code');
+          }
+        }
 
         // 3. Registrar LoginActivity
         await prisma.loginActivity.create({

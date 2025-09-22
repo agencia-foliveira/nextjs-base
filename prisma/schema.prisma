@@ -29,6 +29,8 @@ model User {
     retentionUntil     DateTime? // For data retention policy
     twoFactorSecret    String? // For TOTP
     isTwoFactorEnabled Boolean            @default(false)
+    failedAttempts     Int                @default(0)
+    lockedUntil        DateTime?
     loginActivities    LoginActivity[]
     auditLogs          AuditLog[]
     apiKeys            ApiKey[]
