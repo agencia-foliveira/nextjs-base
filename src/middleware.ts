@@ -22,7 +22,9 @@ export async function middleware(request: NextRequest) {
   }
 
   if (!token && isPrivateRoute(pathname)) {
-    return NextResponse.redirect(new URL(AUTH_ROUTES['sign-in'].path, request.url));
+    const redirectUrl = new URL(AUTH_ROUTES['sign-in'].path, request.url);
+    redirectUrl.searchParams.set('redirect', request.url);
+    return NextResponse.redirect(redirectUrl);
   }
 
   return NextResponse.next();
