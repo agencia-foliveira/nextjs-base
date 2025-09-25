@@ -1,12 +1,12 @@
-import { UserRoles } from './auth.types';
+import { UserRole } from '@prisma/client';
 
 export const PERMISSIONS = {
   dashboard: {
-    read: [UserRoles.ADMIN, UserRoles.USER],
-    write: [UserRoles.ADMIN],
+    read: [UserRole.ADMIN, UserRole.USER],
+    write: [UserRole.ADMIN],
   },
   profile: {
-    read: [UserRoles.ADMIN, UserRoles.USER],
-    write: [UserRoles.ADMIN, UserRoles.USER],
+    read: [UserRole.ADMIN, UserRole.USER],
+    write: [UserRole.ADMIN, UserRole.USER],
   },
 };

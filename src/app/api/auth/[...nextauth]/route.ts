@@ -92,6 +92,7 @@ const authOptions: AuthOptions = {
             userId: user.id,
             ip: (req?.headers?.['x-forwarded-for'] as string) || 'unknown',
             device: req?.headers?.['user-agent'] || 'unknown',
+            successful: true,
           },
         });
 

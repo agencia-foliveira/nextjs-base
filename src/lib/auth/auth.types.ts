@@ -1,17 +1,12 @@
+import type { UserRole } from '@prisma/client';
 import type { PERMISSIONS } from './auth.constants';
 
 export type User = {
   id: string;
   email: string;
   name: string;
-  role: UserRoles;
+  role: UserRole;
 };
-
-export enum UserRoles {
-  ADMIN = 'admin',
-  USER = 'user',
-  GUEST = 'guest',
-}
 
 export type PermissionKeys<T> = {
   [K in keyof T]: T[K] extends Array<any> // se for array, para aqui
