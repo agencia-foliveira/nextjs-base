@@ -45,6 +45,10 @@
     "**/components/**/index.tsx": "${dirname} - Component",
     "**/**/**/**.stories.tsx": "${filename} - Story"
   },
+  "[postcss]": {
+    "editor.defaultFormatter": "stylelint.vscode-stylelint"
+  },
+  "cSpell.language": "en,pt,pt-BR",
 }
 
 

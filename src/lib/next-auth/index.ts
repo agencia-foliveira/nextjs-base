@@ -7,7 +7,7 @@ import {
   LOCK_OUT_THRESHOLD,
   ONE_DAY_IN_SECONDS,
   THIRTY_MINUTES_IN_SECONDS,
-} from '@/constants';
+} from '@/lib/constants';
 import prisma from '../prisma';
 
 export const authOptions: AuthOptions = {

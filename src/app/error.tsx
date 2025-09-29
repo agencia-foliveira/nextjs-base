@@ -1,6 +1,6 @@
 import ErrorPage from '@/features/commons/pages/ErrorPage';
 
-export default function PrivateError({
+export default function AuthError({
   error,
   reset,
 }: {

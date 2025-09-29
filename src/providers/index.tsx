@@ -1,12 +1,12 @@
 'use client';
-import { Toaster } from '@/components/ui/sonner';
+
+import { MantineProvider } from '@mantine/core';
 import { AuthProvider } from '@/features/auth/context/AuthContext';
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <AuthProvider>
-      {children}
-      <Toaster />
-    </AuthProvider>
+    <MantineProvider>
+      <AuthProvider>{children}</AuthProvider>
+    </MantineProvider>
   );
 }
