@@ -4,14 +4,13 @@ import { useEffect } from 'react';
 import { CustomError, ErrorCodes } from '@/lib/errors';
 import classes from './ErrorPage.module.css';
 
-export default function ErrorPage({
-  error,
-  reset,
-}: {
-  error: Error & { digest?: string };
-  reset: () => void;
-}) {
-  const errorCode = error instanceof CustomError ? error.code : ErrorCodes.InternalServerError;
+export default function ErrorPage({ error, reset }: { error: unknown; reset: () => void }) {
+  const err = error as Error & { digest?: string };
+  const errorCode =
+    err instanceof CustomError
+      ? err.code
+      : (err.digest as ErrorCodes) || ErrorCodes.InternalServerError;
+
   const title = {
     401: 'Unauthorized',
     403: 'Forbidden',
