@@ -8,7 +8,7 @@ import {
   ONE_DAY_IN_SECONDS,
   THIRTY_MINUTES_IN_SECONDS,
 } from '@/lib/constants';
-import prisma from '../prisma';
+import prisma from '@/lib/prisma';
 
 export const authOptions: AuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
