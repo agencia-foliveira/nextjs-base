@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import type { PermissionPath } from '../auth';
+import type { PermissionPath } from '@/features/auth/services';
 
 export type PrivateRoutesType = 'dashboard' | 'profile';
 

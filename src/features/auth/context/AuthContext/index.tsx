@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, useContext, useMemo, useState } from 'react';
-import { getPermissions, type PermissionPath, type User } from '@/lib/auth';
+import { getPermissions, type PermissionPath, type User } from '@/features/auth/services';
 
 type AuthStatusType = 'authenticated' | 'unauthenticated' | 'loading';
 

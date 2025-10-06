@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
-import { generateQRCode, generateTwoFactorSecret } from '@/lib/auth';
+import { generateQRCode, generateTwoFactorSecret } from '@/features/auth/services';
 import prisma from '@/lib/prisma';
 import { authOptions } from '../../[...nextauth]/authOptions';
 

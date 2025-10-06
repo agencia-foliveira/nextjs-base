@@ -1,5 +1,5 @@
 import type { UserRole } from '@prisma/client';
-import { getPermissions } from '../auth';
+import { getPermissions } from '@/features/auth/services';
 import { AUTH_ROUTES, PRIVATE_ROUTES } from './routes.constants';
 import type { RouteObject } from './routes.types';
 

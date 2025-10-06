@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
-import { verifyToken } from '@/lib/auth';
+import { verifyToken } from '@/features/auth/services';
 import prisma from '@/lib/prisma';
 import { authOptions } from '../../[...nextauth]/authOptions';
 
