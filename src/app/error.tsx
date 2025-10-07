@@ -1,5 +1,6 @@
 'use client';
-import ErrorPage from '@/features/commons/pages/ErrorPage';
+
+import ErrorPage from '@/components/pages/ErrorPage';
 import type { CustomError } from '@/lib/errors';
 
 export default function AuthError({
