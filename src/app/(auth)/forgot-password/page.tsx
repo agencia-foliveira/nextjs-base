@@ -1,3 +1,5 @@
+import { ForgotPassword } from '@/features/auth/pages/ForgotPassword';
+
 export default function ForgotPasswordPage() {
-  return <div>Forgot Password</div>;
+  return <ForgotPassword />;
 }

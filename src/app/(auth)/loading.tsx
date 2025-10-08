@@ -1,3 +1,5 @@
+import { Skeleton } from '@mantine/core';
+
 export default function Loading() {
-  return <div>Carregando...</div>;
+  return <Skeleton height={400} radius="md" w="100%" />;
 }

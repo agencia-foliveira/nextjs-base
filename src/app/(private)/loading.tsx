@@ -1,3 +1,5 @@
+import { AdminLayoutSkeleton } from '@/components/layout/AdminLayout';
+
 export default function Loading() {
-  return <div>Carregando...</div>;
+  return <AdminLayoutSkeleton />;
 }

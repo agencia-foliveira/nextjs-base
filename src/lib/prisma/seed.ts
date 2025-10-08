@@ -9,7 +9,8 @@ async function main() {
 
   const superAdmin = await prisma.user.create({
     data: {
-      email: 'superadmin@email.com',
+      name: 'Super Admin',
+      email: 'admin@email.com',
       hashedPassword: await bcrypt.hash('Asdf@1234', 10),
       role: UserRole.SUPER_ADMIN,
       acceptedTerms: true,

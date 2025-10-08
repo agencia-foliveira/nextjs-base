@@ -1,8 +1,5 @@
+import { AdminLayout } from '@/components/layout/AdminLayout';
+
 export default function PrivateLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <div>
-      <h1>Privado</h1>
-      {children}
-    </div>
-  );
+  return <AdminLayout>{children}</AdminLayout>;
 }

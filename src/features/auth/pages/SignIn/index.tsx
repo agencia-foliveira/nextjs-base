@@ -1,99 +1,119 @@
 'use client';
 import {
+  Alert,
   Anchor,
   Button,
   Checkbox,
   Divider,
   Group,
   Paper,
-  type PaperProps,
   PasswordInput,
   Stack,
-  Text,
   TextInput,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { upperFirst, useToggle } from '@mantine/hooks';
 import { zod4Resolver } from 'mantine-form-zod-resolver';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { signIn } from 'next-auth/react';
+import { useState } from 'react';
 import { GoogleButton } from '@/components/commons/GoogleButton';
-import { LoginSchema } from '../../services';
+import { useQueryString } from '@/hooks';
+import { SignInSchema } from '../../services';
 
-export function SignIn(props: PaperProps) {
-  const [type, toggle] = useToggle(['login', 'register']);
+export function SignIn() {
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const { getQueryParam } = useQueryString();
+  const redirect = getQueryParam('redirect') || '/dashboard';
+  const router = useRouter();
   const form = useForm({
     initialValues: {
       email: '',
-      name: '',
       password: '',
-      terms: true,
+      remember: false,
     },
-    validate: zod4Resolver(LoginSchema),
+    validate: zod4Resolver(SignInSchema),
   });
 
+  const handleSubmit = async (values: typeof form.values) => {
+    setLoading(true);
+    setErrorMessage(null);
+
+    const result = await signIn('credentials', {
+      redirect: false,
+      email: values.email,
+      password: values.password,
+      callbackUrl: redirect,
+    });
+
+    setLoading(false);
+
+    if (result?.error) {
+      setErrorMessage('E-mail ou senha inválidos');
+      return;
+    }
+
+    router.push(result?.url || '/');
+  };
+
   return (
-    <Paper radius="md" p="lg" withBorder {...props}>
-      <Text size="lg" fw={500}>
-        Welcome to Mantine, {type} with
-      </Text>
-
-      <Group grow mb="md" mt="md">
-        <GoogleButton radius="xl">Google</GoogleButton>
-      </Group>
-
-      <Divider label="Or continue with email" labelPosition="center" my="lg" />
-
-      <form onSubmit={form.onSubmit(() => {})}>
+    <Paper radius="md" p="lg" withBorder>
+      <form onSubmit={form.onSubmit(handleSubmit)}>
         <Stack>
-          {type === 'register' && (
-            <TextInput
-              label="Name"
-              placeholder="Your name"
-              value={form.values.name}
-              onChange={(event) => form.setFieldValue('name', event.currentTarget.value)}
-              radius="md"
-            />
+          {errorMessage && (
+            <Alert title="Erro" color="red">
+              {errorMessage}
+            </Alert>
           )}
-
           <TextInput
-            required
-            label="Email"
-            placeholder="hello@mantine.dev"
+            label="E-mail"
+            placeholder="email@exemplo.com"
             value={form.values.email}
             onChange={(event) => form.setFieldValue('email', event.currentTarget.value)}
-            error={form.errors.email && 'Invalid email'}
+            error={form.errors.email}
             radius="md"
           />
 
           <PasswordInput
-            required
-            label="Password"
-            placeholder="Your password"
+            label="Senha"
+            placeholder="Sua senha"
             value={form.values.password}
             onChange={(event) => form.setFieldValue('password', event.currentTarget.value)}
-            error={form.errors.password && 'Password should include at least 6 characters'}
+            error={form.errors.password}
             radius="md"
           />
 
-          {type === 'register' && (
-            <Checkbox
-              label="I accept terms and conditions"
-              checked={form.values.terms}
-              onChange={(event) => form.setFieldValue('terms', event.currentTarget.checked)}
-            />
-          )}
+          <Checkbox
+            label="Manter-me conectado"
+            checked={form.values.remember}
+            onChange={(event) => form.setFieldValue('remember', event.currentTarget.checked)}
+          />
         </Stack>
 
         <Group justify="space-between" mt="xl">
-          <Anchor component="button" type="button" c="dimmed" onClick={() => toggle()} size="xs">
-            {type === 'register'
-              ? 'Already have an account? Login'
-              : "Don't have an account? Register"}
+          <Anchor component={Link} href="/forgot-password" type="button" c="dimmed" size="xs">
+            Esqueceu sua senha?
           </Anchor>
-          <Button type="submit" radius="xl">
-            {upperFirst(type)}
+          <Button type="submit" radius="xl" loading={loading}>
+            Entrar
           </Button>
         </Group>
       </form>
+
+      <Divider label="Ou continue com" labelPosition="center" my="lg" />
+
+      <Group grow mb="md" mt="md">
+        <GoogleButton radius="xl" loading={loading}>
+          Google
+        </GoogleButton>
+      </Group>
+
+      <Group justify="center">
+        <Anchor component={Link} href="/sign-up" type="button" c="dimmed" size="xs" ta="center">
+          Não tem uma conta? Crie uma agora!
+        </Anchor>
+      </Group>
     </Paper>
   );
 }

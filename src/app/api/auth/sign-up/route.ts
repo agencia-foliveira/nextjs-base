@@ -1,36 +1,38 @@
 import bcrypt from 'bcryptjs';
 import { type NextRequest, NextResponse } from 'next/server';
+import { type SignUpRequest, SignUpSchema } from '@/features/auth/services';
 import prisma from '@/lib/prisma';
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
-    const { email, password, acceptedTerms } = body;
+    const body = (await req.json()) as SignUpRequest;
+    const parsedBody = SignUpSchema.safeParse(body);
 
-    if (!email || !password) {
-      return NextResponse.json({ error: 'Missing email or password' }, { status: 400 });
+    if (!parsedBody.success) {
+      return NextResponse.json(
+        { error: 'Por favor, verifique os dados enviados.', issues: parsedBody.error.issues },
+        { status: 400 }
+      );
     }
 
-    // hash da senha
+    const { email, password, name, terms: acceptedTerms } = parsedBody.data;
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // cria usuário
     const user = await prisma.user.create({
       data: {
+        name,
         email,
         hashedPassword,
         acceptedTerms: acceptedTerms ?? false,
-        role: 'USER', // padrão
+        role: 'USER',
       },
       select: {
         id: true,
-        email: true,
-        role: true,
-        createdAt: true,
       },
     });
 
-    // registrar log de auditoria
+    // TODO: Send welcome email
+
     await prisma.auditLog.create({
       data: {
         userId: user.id,
@@ -39,9 +41,12 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    return NextResponse.json(user);
+    return NextResponse.json(
+      { message: 'Cadastro efetuado com sucesso! Verifique seu e-mail para confirmar sua conta.' },
+      { status: 201 }
+    );
   } catch (err) {
     console.error(err);
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    return NextResponse.json({ error: 'Erro interno do servidor' }, { status: 500 });
   }
 }

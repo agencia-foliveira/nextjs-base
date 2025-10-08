@@ -36,6 +36,9 @@ export function canAccessRoute(role: UserRole, route: string) {
     if (routeObj.permissions && routeObj.permissions.length > 0) {
       const hasPermission = routeObj.permissions.some((permission) => {
         const allowedRoles = getPermissions(permission)?.read as string[];
+
+        if (!allowedRoles || allowedRoles.length === 0) return true;
+
         return allowedRoles.includes(role);
       });
 

@@ -1,5 +1,4 @@
-import { CustomError, ErrorCodes } from '@/lib/errors';
-
-export default function PrivateNotFound() {
-  throw new CustomError('Private Not Found', ErrorCodes.NotFound);
+export default function NotFound() {
+  // throw new CustomError('Not Found', ErrorCodes.NotFound);
+  return <h1>Not Found</h1>;
 }

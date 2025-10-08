@@ -12,76 +12,26 @@ import prisma from '@/lib/prisma';
 
 export const authOptions: AuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
+
   pages: {
     signIn: '/sign-in',
     error: '/sign-in?error=invalid_credentials',
-    verifyRequest: '/two-factor',
   },
+
   session: {
     strategy: 'jwt',
     maxAge: ONE_DAY_IN_SECONDS,
     updateAge: THIRTY_MINUTES_IN_SECONDS,
   },
-  callbacks: {
-    // async signIn({ user, account, profile }) {
-    //   if (account?.provider === 'credentials') {
-    //     const existingUser = await prisma.user.findUnique({
-    //       where: { email: user.email! },
-    //     });
 
-    //     if (!existingUser) {
-    //       return false;
-    //     }
-
-    //     if (existingUser.deletedAt) {
-    //       return false;
-    //     }
-
-    //     if (existingUser.lockedUntil && existingUser.lockedUntil > new Date()) {
-    //       return false;
-    //     }
-
-    //     if (existingUser.isTwoFactorEnabled) {
-    //       return true;
-    //     }
-
-    //     return true;
-    //   }
-
-    //   if (account?.provider === 'google' || account?.provider === 'github') {
-    //     // Similar logic for social logins.
-    //     return true;
-    //   }
-
-    //   return true;
-    // },
-    async jwt({ token, user }) {
-      if (user) {
-        token.id = user.id;
-        token.name = user.name;
-        token.email = user.email;
-        token.role = (user as any).role;
-      }
-      return token;
-    },
-    async session({ session, token }) {
-      if (session.user) {
-        session.user.id = token.id as string;
-        session.user.name = token.name as string;
-        session.user.email = token.email as string;
-        session.user.role = token.role as string;
-      }
-      return session;
-    },
-  },
   adapter: PrismaAdapter(prisma),
+
   providers: [
     CredentialsProvider({
       name: 'credentials',
       credentials: {
-        email: { label: 'email', type: 'text' },
-        password: { label: 'password', type: 'password' },
-        code: { label: '2FA Code', type: 'text', placeholder: '123456' },
+        email: { label: 'Email', type: 'text' },
+        password: { label: 'Password', type: 'password' },
       },
       authorize: async (credentials, req) => {
         if (!credentials?.email || !credentials?.password) {
@@ -107,6 +57,7 @@ export const authOptions: AuthOptions = {
         const isValid = await bcrypt.compare(credentials.password, user.hashedPassword);
 
         if (!isValid) {
+          // Atualiza tentativas e bloqueios
           await prisma.user.update({
             where: { id: user.id },
             data: {
@@ -118,6 +69,7 @@ export const authOptions: AuthOptions = {
             },
           });
 
+          // Registra incidente de segurança
           await prisma.securityIncident.create({
             data: {
               userId: user.id,
@@ -125,30 +77,20 @@ export const authOptions: AuthOptions = {
               details: `Failed login from IP ${req?.headers?.['x-forwarded-for'] || 'unknown'}`,
             },
           });
+
           throw new Error('Invalid credentials');
         }
 
-        // 🔐 2FA
-        if (user.isTwoFactorEnabled) {
-          if (!credentials.code) {
-            throw new Error('2FA code required');
-          }
+        // Login bem-sucedido — resetar contadores
+        await prisma.user.update({
+          where: { id: user.id },
+          data: {
+            failedAttempts: 0,
+            lockedUntil: null,
+          },
+        });
 
-          // TODO: Enviar código para o usuário (e-mail, SMS, app autenticador)
-          // Exemplo com otplib TOTP:
-          // const { authenticator } = require('otplib');
-          // const is2FAValid = authenticator.verify({
-          //   token: credentials.code,
-          //   secret: user.twoFactorSecret!,
-          // });
-
-          const is2FAValid = true; // mock até você integrar otplib
-          if (!is2FAValid) {
-            throw new Error('Invalid 2FA code');
-          }
-        }
-
-        // 3. Registrar LoginActivity
+        // Registrar atividade de login
         const ipHeader = req?.headers?.['x-forwarded-for'];
         const ip = Array.isArray(ipHeader) ? ipHeader[0] : ipHeader || 'unknown';
 
@@ -161,14 +103,37 @@ export const authOptions: AuthOptions = {
           },
         });
 
-        // 4. Retornar usuário sem senha
         return {
           id: user.id,
           email: user.email,
+          name: user.name ?? user.email,
           role: user.role,
-          name: user.email, // ou outro campo se existir
         };
       },
     }),
   ],
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+        token.name = user.name;
+        token.email = user.email;
+        token.avatar = user.avatar;
+        token.role = user.role;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (token) {
+        session.user = {
+          id: token.id,
+          name: token.name,
+          email: token.email,
+          avatar: token.avatar,
+          role: token.role,
+        };
+      }
+      return session;
+    },
+  },
 };

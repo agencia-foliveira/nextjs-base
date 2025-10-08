@@ -1,17 +1,19 @@
 import type { UserRole } from '@prisma/client';
+import type { DefaultUser } from 'next-auth';
 import type { PERMISSIONS } from './auth.constants';
 
-export type User = {
+export interface User extends DefaultUser {
   id: string;
-  email: string;
   name: string;
+  email: string;
   role: UserRole;
-};
+  avatar?: string | null;
+}
 
 export type PermissionKeys<T> = {
-  [K in keyof T]: T[K] extends Array<any> // se for array, para aqui
+  [K in keyof T]: T[K] extends Array<any>
     ? Extract<K, string>
-    : T[K] extends object // se for objeto, continua a recursão
+    : T[K] extends object
       ? `${Extract<K, string>}.${PermissionKeys<T[K]>}`
       : Extract<K, string>;
 }[keyof T];

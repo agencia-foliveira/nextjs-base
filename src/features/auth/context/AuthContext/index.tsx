@@ -1,6 +1,7 @@
 'use client';
 
-import { createContext, useContext, useMemo, useState } from 'react';
+import { useSession } from 'next-auth/react';
+import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { getPermissions, type PermissionPath, type User } from '@/features/auth/services';
 
 type AuthStatusType = 'authenticated' | 'unauthenticated' | 'loading';
@@ -18,6 +19,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [status, setStatus] = useState<AuthStatusType>('loading');
+  const { data: session, status: sessionStatus } = useSession();
 
   const login = (userData: User) => {
     setUser(userData);
@@ -30,7 +32,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const hasPermission = (permission: PermissionPath) => {
-    if (!user) return false;
+    if (!user || status !== 'authenticated') return false;
     const roles = getPermissions(permission);
     return roles.includes(user.role);
   };
@@ -45,6 +47,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }),
     [status, user]
   );
+
+  useEffect(() => {
+    if (session?.user && sessionStatus === 'authenticated') {
+      setUser(session.user as User);
+      setStatus('authenticated');
+    } else if (sessionStatus === 'unauthenticated') {
+      setUser(null);
+      setStatus('unauthenticated');
+    } else {
+      setStatus('loading');
+    }
+  }, [session, sessionStatus]);
 
   return <AuthContext.Provider value={authState}>{children}</AuthContext.Provider>;
 }

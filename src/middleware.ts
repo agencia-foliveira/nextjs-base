@@ -1,22 +1,29 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { getToken } from 'next-auth/jwt';
-import { AUTH_ROUTES, canAccessRoute, isPrivateRoute } from './lib/routes';
+import { AUTH_ROUTES, canAccessRoute, isAuthRoute, isPrivateRoute } from './lib/routes';
 
-const secret = process.env.NEXTAUTH_SECRET;
+const { NEXTAUTH_SECRET, NEXT_ENABLE_HOME_PAGE, NEXT_ENABLE_SIGN_UP_PAGE } = process.env;
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const token = await getToken({ req: request, secret });
+  const token = await getToken({ req: request, secret: NEXTAUTH_SECRET });
 
-  // Redirect root to sign-in page
-  // if (pathname === '/') {
-  //   return NextResponse.redirect(new URL(AUTH_ROUTES['sign-in'].path, request.url));
-  // }
+  if (pathname === '/' && NEXT_ENABLE_HOME_PAGE === 'false') {
+    return NextResponse.redirect(new URL(AUTH_ROUTES['sign-in'].path, request.url));
+  }
+
+  if (pathname === AUTH_ROUTES['sign-up'].path && NEXT_ENABLE_SIGN_UP_PAGE === 'false') {
+    return NextResponse.redirect(new URL(AUTH_ROUTES['sign-in'].path, request.url));
+  }
 
   if (token) {
-    const { user } = token;
+    if (token && isAuthRoute(pathname)) {
+      return NextResponse.redirect(new URL('/dashboard', request.url));
+    }
 
-    if (!canAccessRoute(user.role, pathname)) {
+    const { role } = token;
+
+    if (!canAccessRoute(role, pathname)) {
       return NextResponse.redirect(new URL('/forbidden', request.url));
     }
   }

@@ -29,6 +29,7 @@
     "@mantine/tiptap": "^8.3.2",
     "@next-auth/prisma-adapter": "^1.0.7",
     "@prisma/client": "^6.16.2",
+    "@tanstack/react-query": "^5.90.2",
     "@tiptap/extension-link": "^3.6.2",
     "@tiptap/pm": "^3.6.2",
     "@tiptap/react": "^3.6.2",
@@ -66,14 +67,15 @@
     "postcss-preset-mantine": "^1.18.0",
     "postcss-simple-vars": "^7.0.1",
     "prisma": "6.16.2",
+    "tsx": "^4.20.6",
     "typescript": "^5"
   },
   "lint-staged": {
     "*.{js,ts,jsx,tsx}": [
-      "biome check --write --no-errors-on-unmatched"
+      "biome check --write --diagnostic-level=error"
     ],
     "*.{json,jsonc}": [
-      "biome format --write --no-errors-on-unmatched"
+      "biome format --write --diagnostic-level=error"
     ]
   },
   "packageManager": "pnpm@10.15.0",

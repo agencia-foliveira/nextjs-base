@@ -1,26 +1,15 @@
-// export interface JWTUser {
-//   sub: string;
-//   name: string;
-//   email: string;
-//   role: string;
-//   exp: number;
-//   iss: string;
-//   aud: string;
-// }
-
-import type { User } from '@/lib/auth';
+import type { DefaultSession } from 'next-auth';
+import type { JWT as DefaultJWT } from 'next-auth/jwt';
+import type { User as AppUser } from '@/features/auth/services';
 
 declare module 'next-auth' {
-  interface Session {
-    user: JWTUser;
-    token?: string;
+  interface Session extends DefaultSession {
+    user: User;
   }
+
+  interface User extends AppUser {}
 }
 
 declare module 'next-auth/jwt' {
-  interface JWT {
-    user: User;
-    token?: string;
-    error?: string;
-  }
+  interface JWT extends DefaultJWT, AppUser {}
 }
