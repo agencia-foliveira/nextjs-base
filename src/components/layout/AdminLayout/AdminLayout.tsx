@@ -7,7 +7,7 @@ import { AdminLayoutSkeleton } from './AdminLayout.skeleton';
 
 export function AdminLayout({ children }: { children: React.ReactNode }) {
   const [opened, { toggle }] = useDisclosure();
-  const { status } = useAuth();
+  const { status, user } = useAuth();
 
   if (status === 'loading') return <AdminLayoutSkeleton />;
 
@@ -24,14 +24,16 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
       <AppShell.Header>
         <Group h="100%" px="md" justify="space-between">
           <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
-          Header
+          <div>
+            {user?.name} - {user?.role}
+          </div>
           <Button
             variant="outline"
             size="xs"
             color="red"
             onClick={() =>
               signOut({
-                callbackUrl: '/',
+                callbackUrl: '/sign-in',
               })
             }
           >

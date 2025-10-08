@@ -2,11 +2,11 @@ import { UserRole } from '@prisma/client';
 
 export const PERMISSIONS = {
   dashboard: {
-    read: [UserRole.ADMIN, UserRole.USER],
-    write: [UserRole.ADMIN],
+    read: [UserRole.SUPER_ADMIN],
+    write: [UserRole.SUPER_ADMIN],
   },
   profile: {
-    read: [UserRole.ADMIN, UserRole.USER],
-    write: [UserRole.ADMIN, UserRole.USER],
+    read: [],
+    write: [],
   },
 };

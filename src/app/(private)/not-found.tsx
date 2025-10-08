@@ -1,4 +1,9 @@
+import { AdminLayout } from '@/components/layout/AdminLayout';
+
 export default function NotFound() {
-  // throw new CustomError('Not Found', ErrorCodes.NotFound);
-  return <h1>Not Found</h1>;
+  return (
+    <AdminLayout>
+      <h1>Not Found</h1>
+    </AdminLayout>
+  );
 }

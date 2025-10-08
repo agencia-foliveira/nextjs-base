@@ -23,8 +23,8 @@ export async function middleware(request: NextRequest) {
 
     const { role } = token;
 
-    if (!canAccessRoute(role, pathname)) {
-      return NextResponse.redirect(new URL('/forbidden', request.url));
+    if (!canAccessRoute(role, pathname as any)) {
+      return NextResponse.redirect(new URL('/not-allowed', request.url));
     }
   }
 

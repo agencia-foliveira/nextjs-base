@@ -1,13 +1,19 @@
 'use client';
-import ErrorPage from '@/components/pages/ErrorPage';
-import type { CustomError } from '@/lib/errors';
-
 export default function PrivateError({
   error,
   reset,
 }: {
-  error: CustomError & { digest?: string };
+  error: Error & { digest?: string };
   reset: () => void;
 }) {
-  return <ErrorPage error={error} reset={reset} />;
+  return (
+    <div>
+      <h2>Algo deu errado!</h2>
+      <button type="button" onClick={() => reset()}>
+        Tentar novamente
+      </button>
+      <pre>{error.message}</pre>
+      {error.digest && <pre>{error.digest}</pre>}
+    </div>
+  );
 }

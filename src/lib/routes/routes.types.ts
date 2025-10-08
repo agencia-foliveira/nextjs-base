@@ -2,9 +2,8 @@ import type { ReactNode } from 'react';
 import type { PermissionPath } from '@/features/auth/services';
 
 export type PrivateRoutesType = 'dashboard' | 'profile';
-
 export type AuthRoutesType = 'sign-in' | 'sign-up' | 'forgot-password' | 'reset-password';
-
+export type RoutesType = PrivateRoutesType | AuthRoutesType;
 export type RouteObject = {
   path: string;
   label: string;

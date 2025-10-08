@@ -13,10 +13,15 @@ import {
 import { useForm } from '@mantine/form';
 import { zod4Resolver } from 'mantine-form-zod-resolver';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 import { GoogleButton } from '@/components/commons/GoogleButton';
-import { SignUpSchema } from '../../services';
+import { getRoute } from '@/lib/routes';
+import { SignUpSchema, useSignUp } from '../../services';
 
 export function SignUp() {
+  const { mutateAsync: signUp, isPending, error } = useSignUp();
+  const router = useRouter();
   const form = useForm({
     initialValues: {
       name: '',
@@ -28,9 +33,26 @@ export function SignUp() {
     validate: zod4Resolver(SignUpSchema),
   });
 
-  const handleSubmit = (values: typeof form.values) => {
-    throw new Error(`Function not implemented. ${JSON.stringify(values)}`);
+  const handleSubmit = async (values: typeof form.values) => {
+    try {
+      await signUp({
+        name: values.name,
+        email: values.email,
+        password: values.password,
+        confirmPassword: values.confirmPassword,
+        terms: values.terms as true,
+      });
+      router.push(getRoute('sign-in')?.path || '/sign-in');
+    } catch (error) {
+      console.error('Error during sign up:', error);
+    }
   };
+
+  useEffect(() => {
+    if (error) {
+      console.error('Sign up error:', error);
+    }
+  }, [error]);
 
   return (
     <Paper radius="md" p="lg" withBorder>
@@ -80,7 +102,7 @@ export function SignUp() {
             onChange={(event) => form.setFieldValue('terms', event.currentTarget.checked)}
             error={form.errors.terms}
           />
-          <Button type="submit" radius="xl" fullWidth>
+          <Button type="submit" radius="xl" fullWidth loading={isPending}>
             Criar conta
           </Button>
         </Group>
@@ -89,7 +111,9 @@ export function SignUp() {
       <Divider label="Ou continue com" labelPosition="center" my="lg" />
 
       <Group grow mb="md" mt="md">
-        <GoogleButton radius="xl">Google</GoogleButton>
+        <GoogleButton radius="xl" loading={isPending}>
+          Google
+        </GoogleButton>
       </Group>
 
       <Group justify="center">
