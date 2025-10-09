@@ -9,6 +9,7 @@ import {
   Paper,
   PasswordInput,
   Stack,
+  Text,
   TextInput,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
@@ -62,10 +63,13 @@ export function SignIn() {
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <Stack>
           {errorMessage && (
-            <Alert title="Erro" color="red">
+            <Alert title="Ops! Algo deu errado" color="red">
               {errorMessage}
             </Alert>
           )}
+          <Text ta="center" fz="lg" fw={500}>
+            Acesse sua conta
+          </Text>
           <TextInput
             label="E-mail"
             placeholder="email@exemplo.com"

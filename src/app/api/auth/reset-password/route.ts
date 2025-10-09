@@ -1,21 +1,14 @@
 import bcrypt from 'bcryptjs';
-import type { NextApiRequest } from 'next';
 import { type NextRequest, NextResponse } from 'next/server';
 import { type ResetPasswordRequest, ResetPasswordSchema } from '@/features/auth/services';
 import prisma from '@/lib/prisma';
 
-export async function GET(req: NextApiRequest) {
+export async function GET(req: NextRequest) {
   try {
-    const { token } = req.query;
+    const token = req.nextUrl.searchParams.get('token');
 
     if (!token || typeof token !== 'string') {
-      return NextResponse.json(
-        {
-          error:
-            'Token inválido ou expirado. Por favor, verifique o link enviado para o seu e-mail.',
-        },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Token inválido.' }, { status: 400 });
     }
 
     const user = await prisma.user.findFirst({

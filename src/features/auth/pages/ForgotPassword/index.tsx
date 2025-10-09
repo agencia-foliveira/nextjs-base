@@ -3,9 +3,13 @@ import { Anchor, Button, Group, Paper, Stack, Text, TextInput } from '@mantine/c
 import { useForm } from '@mantine/form';
 import { zod4Resolver } from 'mantine-form-zod-resolver';
 import Link from 'next/link';
-import { ForgotPasswordSchema } from '../../services';
+import { useRouter } from 'next/navigation';
+import { getRoute } from '@/lib/routes';
+import { ForgotPasswordSchema, useForgotPassword } from '../../services';
 
 export function ForgotPassword() {
+  const { mutateAsync: forgotPassword, isPending } = useForgotPassword();
+  const router = useRouter();
   const form = useForm({
     initialValues: {
       email: '',
@@ -13,9 +17,10 @@ export function ForgotPassword() {
     validate: zod4Resolver(ForgotPasswordSchema),
   });
 
-  const handleSubmit = (values: typeof form.values) => {
-    // console.log(values);
-    throw new Error(`Function not implemented. ${JSON.stringify(values)}`);
+  const handleSubmit = async (values: typeof form.values) => {
+    await forgotPassword({ email: values.email });
+    form.reset();
+    router.push(getRoute('sign-in')?.path || '/sign-in');
   };
 
   return (
@@ -39,7 +44,7 @@ export function ForgotPassword() {
             />
 
             <Group justify="space-between">
-              <Button type="submit" radius="xl" fullWidth>
+              <Button type="submit" radius="xl" fullWidth loading={isPending}>
                 Enviar link de recuperação
               </Button>
             </Group>

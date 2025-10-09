@@ -1,5 +1,6 @@
 'use client';
 import {
+  Alert,
   Anchor,
   Button,
   Checkbox,
@@ -8,20 +9,22 @@ import {
   Paper,
   PasswordInput,
   Stack,
+  Text,
   TextInput,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { zod4Resolver } from 'mantine-form-zod-resolver';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { signIn } from 'next-auth/react';
+import { useEffect, useState } from 'react';
 import { GoogleButton } from '@/components/commons/GoogleButton';
 import { getRoute } from '@/lib/routes';
 import { SignUpSchema, useSignUp } from '../../services';
 
 export function SignUp() {
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const { mutateAsync: signUp, isPending, error } = useSignUp();
-  const router = useRouter();
+
   const form = useForm({
     initialValues: {
       name: '',
@@ -42,7 +45,13 @@ export function SignUp() {
         confirmPassword: values.confirmPassword,
         terms: values.terms as true,
       });
-      router.push(getRoute('sign-in')?.path || '/sign-in');
+
+      await signIn('credentials', {
+        email: values.email,
+        password: values.password,
+        callbackUrl: getRoute('dashboard')?.path,
+        redirect: true,
+      });
     } catch (error) {
       console.error('Error during sign up:', error);
     }
@@ -50,7 +59,7 @@ export function SignUp() {
 
   useEffect(() => {
     if (error) {
-      console.error('Sign up error:', error);
+      setErrorMessage('Não foi possível criar sua conta. Verifique os dados informados.');
     }
   }, [error]);
 
@@ -58,6 +67,14 @@ export function SignUp() {
     <Paper radius="md" p="lg" withBorder>
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <Stack>
+          {errorMessage && (
+            <Alert title="Ops! Algo deu errado" color="red">
+              {errorMessage}
+            </Alert>
+          )}
+          <Text ta="center" fz="lg" fw={500}>
+            Criar uma conta
+          </Text>
           <TextInput
             label="Name"
             placeholder="Seu nome"

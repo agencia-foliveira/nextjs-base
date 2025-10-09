@@ -16,6 +16,15 @@ export async function POST(req: NextRequest) {
     }
 
     const { email, password, name, terms: acceptedTerms } = parsedBody.data;
+
+    const existingUser = await prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (existingUser) {
+      return NextResponse.json({ error: 'O e-mail informado já está em uso.' }, { status: 400 });
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = await prisma.user.create({
@@ -30,8 +39,6 @@ export async function POST(req: NextRequest) {
         id: true,
       },
     });
-
-    // TODO: Send welcome email
 
     await prisma.auditLog.create({
       data: {

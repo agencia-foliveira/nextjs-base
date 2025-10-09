@@ -1,6 +1,7 @@
 import crypto from 'node:crypto';
 import { type NextRequest, NextResponse } from 'next/server';
 import { type ForgotPasswordRequest, ForgotPasswordSchema } from '@/features/auth/services';
+import { sendEmail } from '@/lib/brevo';
 import { PASSWORD_RESET_TOKEN_BYTES, PASSWORD_RESET_TOKEN_EXPIRY } from '@/lib/constants';
 import prisma from '@/lib/prisma';
 
@@ -35,15 +36,20 @@ export async function POST(req: NextRequest) {
 
     const resetToken = crypto.randomBytes(PASSWORD_RESET_TOKEN_BYTES).toString('hex');
     const resetTokenExpiry = new Date(Date.now() + PASSWORD_RESET_TOKEN_EXPIRY);
+    const resetLink = `${process.env.NEXT_PUBLIC_BASE_URL}/reset-password?token=${resetToken}`;
+
+    await sendEmail({
+      toName: user.name || 'Usuário',
+      toEmail: user.email,
+      subject: 'Redefinição de senha',
+      templateName: 'resetPassword',
+      link: resetLink,
+    });
 
     await prisma.user.update({
       where: { id: user.id },
       data: { resetToken, resetTokenExpiry },
     });
-
-    // 5️⃣ (TODO) Envio de e-mail
-    // Aqui você chamaria um serviço de e-mail, ex:
-    // await sendPasswordResetEmail(user.email, resetToken);
 
     await prisma.auditLog.create({
       data: {
