@@ -84,9 +84,6 @@ export function SignIn() {
           <Text ta="center" fz="lg" fw={500}>
             Acesse sua conta
           </Text>
-          <Text ta="center" fz="xs" fw={500}>
-            2FA {required2FA ? 'é' : 'não é'} obrigatório
-          </Text>
           <TextInput
             label="E-mail"
             placeholder="email@exemplo.com"

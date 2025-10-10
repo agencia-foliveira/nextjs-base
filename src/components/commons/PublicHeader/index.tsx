@@ -1,4 +1,4 @@
-import { Box, Burger, Button, Divider, Drawer, Group, ScrollArea } from '@mantine/core';
+import { Burger, Button, Divider, Drawer, Group, ScrollArea } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import Link from 'next/link';
 import { Logo } from '../Logo';
@@ -8,33 +8,31 @@ export function PublicHeader() {
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] = useDisclosure(false);
 
   return (
-    <Box>
-      <header className={classes.header}>
-        <Group justify="space-between" h="100%">
-          <Logo />
+    <>
+      <Group justify="space-between" align="center" h="100%">
+        <Logo />
 
-          <Group h="100%" gap={0} visibleFrom="sm">
-            <Link href="/" className={classes.link}>
-              Home
-            </Link>
+        <Group h="100%" gap={0} visibleFrom="sm">
+          <Link href="/" className={classes.link}>
+            Home
+          </Link>
 
-            <Link href="/privacy" className={classes.link}>
-              Política de Privacidade
-            </Link>
-          </Group>
-
-          <Group visibleFrom="sm">
-            <Button component={Link} href="/sign-in" variant="default">
-              Entrar
-            </Button>
-            <Button component={Link} href="/sign-up" variant="outline">
-              Criar Conta
-            </Button>
-          </Group>
-
-          <Burger opened={drawerOpened} onClick={toggleDrawer} hiddenFrom="sm" />
+          <Link href="/privacy" className={classes.link}>
+            Política de Privacidade
+          </Link>
         </Group>
-      </header>
+
+        <Group visibleFrom="sm">
+          <Button component={Link} href="/sign-in" variant="default">
+            Entrar
+          </Button>
+          <Button component={Link} href="/sign-up" variant="outline">
+            Criar Conta
+          </Button>
+        </Group>
+
+        <Burger opened={drawerOpened} onClick={toggleDrawer} hiddenFrom="sm" />
+      </Group>
 
       <Drawer
         opened={drawerOpened}
@@ -67,6 +65,6 @@ export function PublicHeader() {
           </Group>
         </ScrollArea>
       </Drawer>
-    </Box>
+    </>
   );
 }
