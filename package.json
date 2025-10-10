@@ -73,14 +73,11 @@
   "lint-staged": {
     "*.{js,ts,jsx,tsx}": [
       "biome check --write --diagnostic-level=error"
-    ],
-    "*.{json,jsonc}": [
-      "biome format --write --diagnostic-level=error"
     ]
   },
   "packageManager": "pnpm@10.15.0",
   "engines": {
-    "node": ">=20",
+    "node": ">=22",
     "pnpm": ">=10"
   },
   "engineStrict": true

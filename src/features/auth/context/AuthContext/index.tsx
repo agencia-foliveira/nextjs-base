@@ -1,5 +1,4 @@
 'use client';
-
 import { useSession } from 'next-auth/react';
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { getPermissions, type PermissionPath, type User } from '@/features/auth/services';
@@ -9,8 +8,9 @@ type AuthStatusType = 'authenticated' | 'unauthenticated' | 'loading';
 type AuthContextType = {
   status: AuthStatusType;
   user: User | null;
-  login: (user: User) => void;
-  logout: () => void;
+  required2FA: boolean;
+  update: () => void;
+  signOut: () => void;
   hasPermission: (permission: PermissionPath) => boolean;
 };
 
@@ -18,15 +18,11 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
+  const [required2FA, setRequired2FA] = useState(false);
   const [status, setStatus] = useState<AuthStatusType>('loading');
-  const { data: session, status: sessionStatus } = useSession();
+  const { data: session, status: sessionStatus, update } = useSession();
 
-  const login = (userData: User) => {
-    setUser(userData);
-    setStatus('authenticated');
-  };
-
-  const logout = () => {
+  const signOut = () => {
     setUser(null);
     setStatus('unauthenticated');
   };
@@ -41,22 +37,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     () => ({
       status,
       user,
-      login,
-      logout,
+      required2FA,
+      update,
+      signOut,
       hasPermission,
     }),
-    [status, user]
+    [status, user, required2FA]
   );
 
   useEffect(() => {
-    if (session?.user && sessionStatus === 'authenticated') {
-      setUser(session.user as User);
-      setStatus('authenticated');
-    } else if (sessionStatus === 'unauthenticated') {
-      setUser(null);
-      setStatus('unauthenticated');
-    } else {
-      setStatus('loading');
+    if (session) {
+      const { user, required2FA } = session;
+
+      setRequired2FA(required2FA || false);
+
+      if (sessionStatus === 'authenticated') {
+        setUser(user as User);
+        setStatus('authenticated');
+      } else if (sessionStatus === 'unauthenticated') {
+        setUser(null);
+        setRequired2FA(false);
+        setStatus('unauthenticated');
+      } else {
+        setStatus('loading');
+      }
     }
   }, [session, sessionStatus]);
 

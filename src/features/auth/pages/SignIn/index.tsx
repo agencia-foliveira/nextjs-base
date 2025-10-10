@@ -15,19 +15,21 @@ import {
 import { useForm } from '@mantine/form';
 import { zod4Resolver } from 'mantine-form-zod-resolver';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 import { useState } from 'react';
 import { GoogleButton } from '@/components/commons/GoogleButton';
 import { useQueryString } from '@/hooks';
+import { TwoFactorQRCode } from '../../components/TwoFactorQRCode';
+import { useAuth } from '../../context/AuthContext';
 import { SignInSchema } from '../../services';
 
 export function SignIn() {
   const [loading, setLoading] = useState(false);
+  const { required2FA } = useAuth();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const { getQueryParam } = useQueryString();
   const redirect = getQueryParam('redirect') || '/dashboard';
-  const router = useRouter();
+
   const form = useForm({
     initialValues: {
       email: '',
@@ -37,7 +39,7 @@ export function SignIn() {
     validate: zod4Resolver(SignInSchema),
   });
 
-  const handleSubmit = async (values: typeof form.values) => {
+  const handleSign = async (values: typeof form.values) => {
     setLoading(true);
     setErrorMessage(null);
 
@@ -45,22 +47,34 @@ export function SignIn() {
       redirect: false,
       email: values.email,
       password: values.password,
-      callbackUrl: redirect,
+      callbackUrl: required2FA ? '/dashboard' : (redirect as string),
     });
 
     setLoading(false);
 
     if (result?.error) {
       setErrorMessage('E-mail ou senha inválidos');
-      return;
     }
-
-    router.push(result?.url || '/');
   };
+
+  if (required2FA)
+    return (
+      <TwoFactorQRCode
+        onSuccess={async (code) => {
+          await signIn('credentials', {
+            redirect: true,
+            email: form.values.email,
+            password: form.values.password,
+            code,
+            callbackUrl: redirect,
+          });
+        }}
+      />
+    );
 
   return (
     <Paper radius="md" p="lg" withBorder>
-      <form onSubmit={form.onSubmit(handleSubmit)}>
+      <form onSubmit={form.onSubmit(handleSign)}>
         <Stack>
           {errorMessage && (
             <Alert title="Ops! Algo deu errado" color="red">
@@ -69,6 +83,9 @@ export function SignIn() {
           )}
           <Text ta="center" fz="lg" fw={500}>
             Acesse sua conta
+          </Text>
+          <Text ta="center" fz="xs" fw={500}>
+            2FA {required2FA ? 'é' : 'não é'} obrigatório
           </Text>
           <TextInput
             label="E-mail"

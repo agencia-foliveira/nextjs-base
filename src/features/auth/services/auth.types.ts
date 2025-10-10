@@ -4,10 +4,11 @@ import type { PERMISSIONS } from './auth.constants';
 
 export interface User extends DefaultUser {
   id: string;
-  name: string;
-  email: string;
+  name?: string | null;
+  email?: string | null;
   role: UserRole;
   avatar?: string | null;
+  required2FA?: boolean;
 }
 
 export type PermissionKeys<T> = {

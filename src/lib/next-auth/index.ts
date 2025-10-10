@@ -1,7 +1,9 @@
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
+import { UserRole } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import type { AuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
+import { authenticator } from 'otplib';
 import {
   LOCK_OUT_DURATION_MINUTES,
   LOCK_OUT_THRESHOLD,
@@ -32,10 +34,11 @@ export const authOptions: AuthOptions = {
       credentials: {
         email: { label: 'Email', type: 'text' },
         password: { label: 'Password', type: 'password' },
+        code: { label: '2FA Code', type: 'text' },
       },
       authorize: async (credentials, req) => {
         if (!credentials?.email || !credentials?.password) {
-          throw new Error('Missing email or password');
+          throw new Error('Credenciais inválidas');
         }
 
         const user = await prisma.user.findUnique({
@@ -43,15 +46,15 @@ export const authOptions: AuthOptions = {
         });
 
         if (!user || !user.hashedPassword) {
-          throw new Error('Invalid credentials');
+          throw new Error('Credenciais inválidas');
         }
 
         if (user.deletedAt) {
-          throw new Error('Account has been deactivated');
+          throw new Error('Conta desativada. Entre em contato com o suporte.');
         }
 
         if (user.lockedUntil && user.lockedUntil > new Date()) {
-          throw new Error('Account is locked. Try again later.');
+          throw new Error('Conta bloqueada. Tente novamente mais tarde.');
         }
 
         const isValid = await bcrypt.compare(credentials.password, user.hashedPassword);
@@ -78,7 +81,33 @@ export const authOptions: AuthOptions = {
             },
           });
 
-          throw new Error('Invalid credentials');
+          throw new Error('Credenciais inválidas');
+        }
+
+        // Se o usuário tem 2FA ativo, o código deve estar presente
+        if (user.isTwoFactorEnabled) {
+          if (!credentials.code) {
+            // etapa 1: senha válida, mas falta o segundo fator
+            // aqui você não cria sessão ainda
+            return { id: user.id, role: UserRole.GUEST, required2FA: true };
+          }
+
+          const isCodeValid = authenticator.verify({
+            token: credentials.code,
+            secret: user.twoFactorSecret!,
+          });
+
+          if (!isCodeValid) {
+            await prisma.securityIncident.create({
+              data: {
+                userId: user.id,
+                type: 'FAILED_2FA',
+                details: `Invalid 2FA token from IP ${req?.headers?.['x-forwarded-for'] || 'unknown'}`,
+              },
+            });
+
+            throw new Error('Código de verificação inválido');
+          }
         }
 
         // Login bem-sucedido — resetar contadores
@@ -105,9 +134,11 @@ export const authOptions: AuthOptions = {
 
         return {
           id: user.id,
+          name: user.name,
           email: user.email,
-          name: user.name ?? user.email,
           role: user.role,
+          avatar: user.avatar,
+          required2FA: false,
         };
       },
     }),
@@ -118,8 +149,9 @@ export const authOptions: AuthOptions = {
         token.id = user.id;
         token.name = user.name;
         token.email = user.email;
-        token.avatar = user.avatar;
         token.role = user.role;
+        token.avatar = user.avatar;
+        token.required2FA = user.required2FA;
       }
       return token;
     },
@@ -129,9 +161,10 @@ export const authOptions: AuthOptions = {
           id: token.id,
           name: token.name,
           email: token.email,
-          avatar: token.avatar,
           role: token.role,
+          avatar: token.avatar,
         };
+        session.required2FA = token.required2FA;
       }
       return session;
     },

@@ -5,6 +5,7 @@ import type { User as AppUser } from '@/features/auth/services';
 declare module 'next-auth' {
   interface Session extends DefaultSession {
     user: User;
+    required2FA?: boolean;
   }
 
   interface User extends AppUser {}

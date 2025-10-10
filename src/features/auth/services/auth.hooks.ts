@@ -87,3 +87,90 @@ export function useVerifyResetToken(token?: string | null) {
     },
   });
 }
+
+export function use2FAGenerateSecret() {
+  return useMutation({
+    mutationFn: (): Promise<{ secret: string; otpauth: string }> => {
+      return axiosInstance.post('/auth/2fa/generate-secret');
+    },
+    onError(error) {
+      notifications.show({
+        color: 'red',
+        title: 'Ops! Algo deu errado',
+        message: error.message || 'Erro ao gerar código QR',
+      });
+    },
+  });
+}
+
+export function use2FAVerify() {
+  return useMutation({
+    mutationFn: (data: { code: string }) => {
+      return axiosInstance.post('/auth/2fa/verify', data);
+    },
+    onSuccess({ data }) {
+      notifications.show({
+        color: 'green',
+        title: 'Sucesso!',
+        message: '2FA verificado com sucesso!',
+      });
+
+      return data;
+    },
+    onError(error) {
+      notifications.show({
+        color: 'red',
+        title: 'Ops! Algo deu errado',
+        message: error.message || 'Erro ao verificar 2FA',
+      });
+    },
+  });
+}
+
+export function use2FAEnable() {
+  return useMutation({
+    mutationFn: (data: { code: string }) => {
+      return axiosInstance.post('/auth/2fa/enable', data);
+    },
+    onSuccess({ data }) {
+      notifications.show({
+        color: 'green',
+        title: 'Sucesso!',
+        message: '2FA habilitado com sucesso!',
+      });
+
+      return data;
+    },
+    onError(error) {
+      notifications.show({
+        color: 'red',
+        title: 'Ops! Algo deu errado',
+        message: error.message || 'Erro ao habilitar 2FA',
+      });
+    },
+  });
+}
+
+export function use2FADisable() {
+  return useMutation({
+    mutationFn: (data: { code: string }) => {
+      return axiosInstance.post('/auth/2fa/disable', data);
+    },
+    onSuccess({ data }) {
+      notifications.show({
+        color: 'green',
+        title: 'Sucesso!',
+        message: '2FA desabilitado com sucesso!',
+      });
+
+      return data;
+    },
+    onError(error) {
+      notifications.show({
+        color: 'red',
+        title: 'Ops! Algo deu errado',
+        message: error.message || 'Erro ao desabilitar 2FA',
+      });
+    },
+  });
+}

@@ -5,8 +5,8 @@ import { AUTH_ROUTES, canAccessRoute, isAuthRoute, isPrivateRoute } from './lib/
 const { NEXTAUTH_SECRET, NEXT_ENABLE_HOME_PAGE, NEXT_ENABLE_SIGN_UP_PAGE } = process.env;
 
 export async function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
   const token = await getToken({ req: request, secret: NEXTAUTH_SECRET });
+  const { pathname } = request.nextUrl;
 
   if (pathname === '/' && NEXT_ENABLE_HOME_PAGE === 'false') {
     return NextResponse.redirect(new URL(AUTH_ROUTES['sign-in'].path, request.url));
@@ -17,11 +17,15 @@ export async function middleware(request: NextRequest) {
   }
 
   if (token) {
-    if (token && isAuthRoute(pathname)) {
-      return NextResponse.redirect(new URL('/dashboard', request.url));
+    const { role, required2FA } = token;
+
+    if (isPrivateRoute(pathname) && required2FA) {
+      return NextResponse.redirect(new URL(AUTH_ROUTES['sign-in'].path, request.url));
     }
 
-    const { role } = token;
+    if (isAuthRoute(pathname) && !required2FA) {
+      return NextResponse.redirect(new URL('/dashboard', request.url));
+    }
 
     if (!canAccessRoute(role, pathname as any)) {
       return NextResponse.redirect(new URL('/not-allowed', request.url));
