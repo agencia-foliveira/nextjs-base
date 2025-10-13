@@ -50,7 +50,7 @@ export function PublicFooter() {
   });
 
   return (
-    <footer className={classes.footer}>
+    <div className={classes.footer}>
       <Container className={classes.inner}>
         <div className={classes.logo}>
           <Logo />
@@ -94,6 +94,6 @@ export function PublicFooter() {
           </ActionIcon>
         </Group>
       </Container>
-    </footer>
+    </div>
   );
 }
