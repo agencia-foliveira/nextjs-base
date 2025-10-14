@@ -1,5 +1,5 @@
 'use client';
-import { Button, Paper, PinInput, Skeleton, Stack, Text } from '@mantine/core';
+import { Button, Paper, PinInput, Stack, Text } from '@mantine/core';
 import Image from 'next/image';
 import { signOut } from 'next-auth/react';
 import QRCode from 'qrcode';
@@ -12,14 +12,17 @@ interface TwoFactorQRCodeProps {
 
 export function TwoFactorQRCode({ onSuccess }: TwoFactorQRCodeProps) {
   const [qr, setQr] = useState<string | null>(null);
-  const { mutateAsync: generateSecret, isPending: isGenerating, error } = use2FAGenerateSecret();
+  const { mutateAsync: generateSecret, error } = use2FAGenerateSecret();
   const { mutateAsync: verify2FA, isPending: isVerifying } = use2FAVerify();
 
   const handleGenerateQR = async () => {
     try {
       const { otpauth } = await generateSecret();
-      const qrCodeDataUrl = await QRCode.toDataURL(otpauth);
-      setQr(qrCodeDataUrl);
+
+      if (otpauth) {
+        const qrCodeDataUrl = await QRCode.toDataURL(otpauth);
+        setQr(qrCodeDataUrl);
+      }
     } catch (err) {
       console.error('Error generating QR code:', err);
     }
@@ -44,14 +47,15 @@ export function TwoFactorQRCode({ onSuccess }: TwoFactorQRCodeProps) {
         <Text ta="center" fz="lg" fw={500}>
           Configuração de Autenticação de Dois Fatores (2FA)
         </Text>
-        <Text ta="center" fz="sm">
-          Aponte seu aplicativo autenticador para o QR Code abaixo para configurar a autenticação de
-          dois fatores.
-        </Text>
-        {qr ? (
-          <Image height={250} width={250} src={qr} alt="QR Code" />
-        ) : (
-          <Skeleton height={250} width={250} radius="md" animate={isGenerating} />
+
+        {qr && (
+          <>
+            <Text ta="center" fz="sm">
+              Aponte seu aplicativo autenticador para o QR Code abaixo para configurar a
+              autenticação de dois fatores.
+            </Text>
+            <Image height={250} width={250} src={qr} alt="QR Code" />
+          </>
         )}
         <Text ta="center" fz="sm">
           Após configurar o aplicativo, insira o código de 6 dígitos gerado para verificar a

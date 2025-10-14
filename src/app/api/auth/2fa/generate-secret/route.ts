@@ -13,11 +13,17 @@ export async function POST() {
 
   const user = await prisma.user.findUnique({
     where: { id: session.user.id },
-    select: { email: true, twoFactorSecret: true },
+    select: { email: true, twoFactorSecret: true, isTwoFactorEnabled: true },
   });
 
   if (!user?.email) {
     return NextResponse.json({ error: 'E-mail do usuário não informado' }, { status: 400 });
+  }
+
+  if (user.isTwoFactorEnabled && user.twoFactorSecret) {
+    return NextResponse.json({
+      otpauth: null,
+    });
   }
 
   const secret = user.twoFactorSecret || authenticator.generateSecret();
@@ -33,6 +39,5 @@ export async function POST() {
 
   return NextResponse.json({
     otpauth,
-    secret,
   });
 }
