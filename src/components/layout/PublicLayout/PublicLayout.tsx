@@ -13,7 +13,9 @@ export function PublicLayout({ children }: { children: React.ReactNode }) {
         <PublicHeader />
       </AppShell.Header>
 
-      <AppShell.Main pt="var(--app-shell-header-height)">{children}</AppShell.Main>
+      <AppShell.Main pt="var(--app-shell-header-height)" px={0}>
+        {children}
+      </AppShell.Main>
 
       <AppShell.Footer p={0} pos="relative">
         <PublicFooter />

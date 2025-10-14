@@ -8,7 +8,6 @@
 
 ## Features
 
-- Add mdx for static pages like privacy and terms
 - (future) Integrate strapi cms for manage static pages
 - Implement profile page with manage GPDR requirements
 - Implement dummy dashboard with a blank "Get Started"
