@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { SessionProvider } from 'next-auth/react';
 import { AuthProvider } from '@/features/auth/context/AuthContext';
 import { QUERY_STALE_TIME } from '@/lib/constants';
+import { theme } from './theme';
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const queryClient = new QueryClient({
@@ -20,7 +21,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
     <SessionProvider>
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
-          <MantineProvider>
+          <MantineProvider theme={theme}>
             <Notifications position="top-right" />
             {children}
           </MantineProvider>

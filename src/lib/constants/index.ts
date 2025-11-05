@@ -9,6 +9,7 @@ export const LOCK_OUT_THRESHOLD = 5;
 export const LOCK_OUT_DURATION_MINUTES = 15 * 60_000;
 export const PASSWORD_RESET_TOKEN_BYTES = 32;
 export const PASSWORD_RESET_TOKEN_EXPIRY = 60 * 60 * 1000;
+export const API_KEY_EXPIRES_THRESHOLD = 30 * 24 * 60 * 60 * 1000;
 
 /**
  * Application related constants
