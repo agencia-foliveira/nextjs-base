@@ -1,17 +1,16 @@
 # TODO
 
-## Layout
+## UX/UI
 
-- Implement paublic layout with header and footer
-- Implement dummy home page using Mantine UI as base
-- Implement skeleton for public and admin layouts
+- Adicionar menu do usuário
+- Finalizar a página de perfil
+- Criar tela de onboarding para a conexão com o Bling
+- Criar uma página para o super admin gerenciar os usuários
+- Implementar o login com o Google do Next Auth
+- Adicionar scroll infinito na dashboard
 
-## Features
-
-- (future) Integrate strapi cms for manage static pages
-- Implement profile page with manage GPDR requirements
-- Implement dummy dashboard with a blank "Get Started"
-- Implement a users module for super admin manage the users
-- Implement a sample ask for AI chat, with informations of the possibilities to build
-
-## Fixes
+## Core Features
+- Finalizar os endpoints de autenticação
+- Criar a integração com Bling
+- Criar fluxo de importação dos produtos em background com n8n
+- Integrar página de geração de campanha com o ChatGPT
