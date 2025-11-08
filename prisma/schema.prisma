@@ -1,0 +1,104 @@
+// Prisma schema for authentication, authorization, and data protection
+// Database: PostgreSQL
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+    SUPER_ADMIN
+    ADMIN
+    USER
+    GUEST
+}
+
+model User {
+    id                 String             @id @default(uuid())
+    name               String
+    email              String             @unique
+    hashedPassword     String
+    role               UserRole           @default(USER)
+    avatar             String?
+    phone              String?
+    acceptedTerms      Boolean            @default(false)
+    createdAt          DateTime           @default(now())
+    updatedAt          DateTime           @updatedAt
+    deletedAt          DateTime? // For data retention
+    retentionUntil     DateTime? // For data retention policy
+    twoFactorSecret    String? // For TOTP
+    resetToken         String? // For password resets
+    resetTokenExpiry   DateTime?
+    isTwoFactorEnabled Boolean            @default(false)
+    failedAttempts     Int                @default(0)
+    lockedUntil        DateTime?
+    loginActivities    LoginActivity[]
+    auditLogs          AuditLog[]
+    apiKeys            ApiKey[]
+    securityIncidents  SecurityIncident[]
+
+    @@index([email, createdAt, deletedAt]) // To optimize lookups excluding soft-deleted users
+}
+
+model AuditLog {
+    id        String   @id @default(uuid())
+    user      User?    @relation(fields: [userId], references: [id])
+    userId    String?
+    action    String
+    resource  String
+    payload   Json?
+    metadata  String?
+    createdAt DateTime @default(now())
+
+    @@index([userId, createdAt])
+}
+
+model SecurityIncident {
+    id        String   @id @default(uuid())
+    user      User?    @relation(fields: [userId], references: [id])
+    userId    String?
+    type      String
+    details   String
+    createdAt DateTime @default(now())
+
+    @@index([userId, createdAt])
+}
+
+model LoginActivity {
+    id         String   @id @default(uuid())
+    user       User     @relation(fields: [userId], references: [id])
+    userId     String
+    successful Boolean
+    ip         String
+    device     String?
+    geo        String?
+    createdAt  DateTime @default(now())
+
+    @@index([userId, createdAt])
+}
+
+model ApiKey {
+    id        String   @id @default(uuid())
+    user      User     @relation(fields: [userId], references: [id])
+    userId    String
+    key       String   @unique
+    scopes    String[]
+    expiresAt DateTime
+    createdAt DateTime @default(now())
+    revoked   Boolean  @default(false)
+
+    @@index([key, userId, createdAt])
+}
+
+model DataRegistry {
+    id        String   @id @default(uuid())
+    location  String
+    type      String
+    createdAt DateTime @default(now())
+
+    @@index([createdAt])
+}

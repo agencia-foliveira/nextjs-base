@@ -1,5 +1,5 @@
-import CustomSignUp from '@/features/auth/components/CustomSignUp';
+import { SignUp } from '@/features/auth/pages/SignUp';
 
 export default function SignUpPage() {
-  return <CustomSignUp />;
+  return <SignUp />;
 }

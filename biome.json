@@ -7,7 +7,7 @@
   },
   "files": {
     "ignoreUnknown": true,
-    "includes": ["src/**/*"]
+    "includes": ["src/**/*", "!*.json", "!.next/**/*", "!node_modules/**/*"]
   },
   "formatter": {
     "enabled": true,
@@ -44,7 +44,8 @@
         "noUnusedVariables": "error",
         "noUnusedFunctionParameters": "error",
         "noUnusedImports": "error",
-        "useUniqueElementIds": "off"
+        "useUniqueElementIds": "off",
+        "useExhaustiveDependencies": "warn"
       },
       "suspicious": {
         "noArrayIndexKey": "info",
@@ -59,7 +60,8 @@
         "useNumberToFixedDigitsArgument": "error",
         "useErrorMessage": "error",
         "noVar": "error",
-        "noTsIgnore": "error"
+        "noTsIgnore": "error",
+        "noShadowRestrictedNames": "warn"
       }
     }
   },
