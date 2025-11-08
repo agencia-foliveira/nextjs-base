@@ -1,13 +1,13 @@
 'use client';
-import { AppShell, Burger, Button, Group } from '@mantine/core';
+import { AppShell, Container } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { signOut } from 'next-auth/react';
 import { useAuth } from '@/features/auth/context/AuthContext';
+import { AdminHeader } from './AdminHeader';
 import { AdminLayoutSkeleton } from './AdminLayout.skeleton';
 
 export function AdminLayout({ children }: { children: React.ReactNode }) {
-  const [opened, { toggle }] = useDisclosure();
-  const { status, user } = useAuth();
+  const [opened] = useDisclosure();
+  const { status } = useAuth();
 
   if (status === 'loading') return <AdminLayoutSkeleton />;
 
@@ -16,33 +16,17 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
       padding="md"
       header={{ height: { base: 60, md: 70, lg: 80 } }}
       navbar={{
-        width: { base: 200, md: 300, lg: 400 },
+        width: { base: 200, md: 300 },
         breakpoint: 'sm',
         collapsed: { mobile: !opened },
       }}
     >
-      <AppShell.Header>
-        <Group h="100%" px="md" justify="space-between">
-          <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
-          <div>
-            {user?.name} - {user?.role}
-          </div>
-          <Button
-            variant="outline"
-            size="xs"
-            color="red"
-            onClick={() =>
-              signOut({
-                callbackUrl: '/sign-in',
-              })
-            }
-          >
-            Logout
-          </Button>
-        </Group>
+      <AppShell.Header style={{ background: '#FFFFFF', borderBottom: '1px solid #e0e0e0' }}>
+        <AdminHeader />
       </AppShell.Header>
-      <AppShell.Navbar p="md">Navbar</AppShell.Navbar>
-      <AppShell.Main>{children}</AppShell.Main>
+      <AppShell.Main>
+        <Container size="xl">{children}</Container>
+      </AppShell.Main>
     </AppShell>
   );
 }
