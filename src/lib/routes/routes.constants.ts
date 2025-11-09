@@ -6,6 +6,16 @@ export const PRIVATE_ROUTES: Record<PrivateRoutesType, RouteObject> = {
     label: 'Dashboard',
     permissions: ['dashboard.read', 'dashboard.write'],
   },
+  campaign: {
+    path: '/campaign',
+    label: 'Campaign',
+    permissions: ['campaign.read', 'campaign.write'],
+  },
+  bling: {
+    path: '/bling',
+    label: 'Bling',
+    permissions: ['bling.read', 'bling.write'],
+  },
   profile: {
     path: '/profile',
     label: 'Profile',

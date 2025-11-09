@@ -73,4 +73,14 @@ export const theme = createTheme({
 
     Loader: Loader.extend({}),
   },
+  other: {
+    colors: {
+      bling: '#288F4E',
+      goldDark: '#A8872A',
+      blackSoft: '#2E2E2E',
+      grayNeutral: '#6E6E6E',
+      grayLight: '#F5F5F5',
+      blueTech: '#1E90FF',
+    },
+  },
 });

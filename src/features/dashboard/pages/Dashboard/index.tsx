@@ -14,6 +14,7 @@ import {
 import { Filter, Package, Sparkles } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { BlingConnectBanner } from '@/features/bling/components/BlingConnectBanner';
 import { mockProducts } from '@/mock';
 import type { ProductAlert } from '@/types';
 import { ProductCard } from '../../components/ProductCard';
@@ -44,6 +45,8 @@ export function Dashboard() {
 
   return (
     <Stack gap="xl">
+      <BlingConnectBanner />
+
       {/* Summary Cards */}
       <SimpleGrid cols={{ base: 1, sm: 3 }}>
         <Card padding="lg" radius="md" withBorder shadow="sm" style={{ background: '#FFFFFF' }}>

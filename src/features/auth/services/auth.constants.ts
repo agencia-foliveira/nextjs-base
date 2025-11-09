@@ -5,6 +5,14 @@ export const PERMISSIONS = {
     read: [],
     write: [],
   },
+  campaign: {
+    read: [],
+    write: [UserRole.USER],
+  },
+  bling: {
+    read: [],
+    write: [UserRole.USER],
+  },
   users: {
     read: [UserRole.SUPER_ADMIN],
     write: [UserRole.SUPER_ADMIN],
