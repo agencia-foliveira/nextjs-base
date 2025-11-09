@@ -55,7 +55,7 @@ export function UserDropdown() {
               <Menu.Item
                 leftSection={<IconUsers size={16} stroke={1.5} />}
                 component={Link}
-                href="/admin/users"
+                href="/users"
               >
                 Ver usuários
               </Menu.Item>

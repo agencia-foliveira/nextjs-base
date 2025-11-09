@@ -2,7 +2,6 @@
 
 ## UX/UI
 
-- Criar uma página para o super admin gerenciar os usuários
 - Implementar o login com o Google do Next Auth
 - Adicionar scroll infinito na dashboard
 
