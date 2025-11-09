@@ -40,7 +40,6 @@ export function UserDropdown() {
             >
               {user?.name ? getUserInitials(user.name) : 'U'}
             </Avatar>
-
             <div>
               <Text fw={500}>{user?.name || 'User Name'}</Text>
               <Text size="xs" c="dimmed">

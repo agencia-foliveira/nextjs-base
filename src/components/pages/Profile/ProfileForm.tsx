@@ -12,13 +12,14 @@ import {
   Title,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { IconTrash } from '@tabler/icons-react';
-import { useState } from 'react';
+import { IconTrash, IconUpload } from '@tabler/icons-react';
+import { useEffect, useState } from 'react';
 import { useAuth } from '@/features/auth/context/AuthContext';
 import { AccountRemoveModal } from './AccountRemoveModal';
 
 export default function ProfileForm() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const { user } = useAuth();
 
   const profileForm = useForm({
@@ -34,6 +35,12 @@ export default function ProfileForm() {
     },
   });
 
+  const getUserInitials = (name: string) => {
+    const names = name.split(' ');
+    const initials = names.map((n) => n.charAt(0).toUpperCase()).join('');
+    return initials;
+  };
+
   async function handleProfileSubmit(values: any) {
     // Validate / sanitize in backend
     // Call PATCH /api/user
@@ -46,30 +53,57 @@ export default function ProfileForm() {
     // append AuditLog in backend
   }
 
+  // implement avatar preview
+  useEffect(() => {
+    if (profileForm.values.avatar) {
+      const objectUrl = URL.createObjectURL(profileForm.values.avatar);
+      setAvatarPreview(objectUrl);
+      return () => URL.revokeObjectURL(objectUrl);
+    }
+  }, [profileForm.values.avatar]);
+
+  useEffect(() => {
+    if (user) {
+      profileForm.setValues({
+        name: user.name || '',
+        email: user.email || '',
+        // phone: user.phone || '',
+      });
+      setAvatarPreview(user.avatar || null);
+    }
+  }, [user]);
+
   return (
     <>
-      <Card shadow="sm">
-        <Title id="my-account" order={4}>
+      <Card withBorder>
+        <Title id="my-account" order={4} mb="md">
           Meu Perfil
         </Title>
-        <Group>
-          <Group>
-            <Avatar radius="xl" size="lg" src={user?.avatar || undefined} />
+        <Group justify="space-between">
+          <Group gap="sm">
+            <Avatar
+              radius="xl"
+              size="lg"
+              src={user?.image || avatarPreview || undefined}
+              alt={user?.name || 'User Avatar'}
+              color="brand"
+            >
+              {user?.name ? getUserInitials(user.name) : 'U'}
+            </Avatar>
             <div>
-              <Text w={700}>{user?.name}</Text>
-              <Text size="sm">{user?.email}</Text>
+              <Text fw={500}>{user?.name || 'User Name'}</Text>
+              <Text size="xs" c="dimmed">
+                {user?.email || 'user@example.com'}
+              </Text>
             </div>
           </Group>
           <Group>
-            <Button variant="default" onClick={() => {}}>
-              Editar Perfil
-            </Button>
             <Button
               color="red"
               onClick={() => setShowDeleteModal(true)}
               leftSection={<IconTrash size={16} />}
             >
-              Excluir conta
+              Excluir minha conta
             </Button>
           </Group>
         </Group>
@@ -82,9 +116,11 @@ export default function ProfileForm() {
             <TextInput label="E-mail" {...profileForm.getInputProps('email')} required />
             <TextInput label="Telefone" {...profileForm.getInputProps('phone')} />
             <FileInput
-              label="Avatar"
+              label="Alterar foto de perfil"
               placeholder="Escolha um arquivo"
+              description="Formatos suportados: jpg, png, svg, gif. Tamanho máximo: 5MB."
               accept="image/*"
+              leftSection={<IconUpload size={16} />}
               {...profileForm.getInputProps('avatar')}
             />
             <Group>

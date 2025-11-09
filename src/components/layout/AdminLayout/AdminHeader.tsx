@@ -9,7 +9,7 @@ export function AdminHeader() {
     <Container size="xl" h="100%">
       <Group justify="space-between" h="100%">
         <Link href="/dashboard" style={{ textDecoration: 'none' }}>
-          <Group>
+          <Group gap="xs">
             <Image src="/img/logo.png" alt="Nexus OS" width={40} height={40} />
             <Box>
               <Text fw={700} c="#000000">

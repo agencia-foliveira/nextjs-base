@@ -1,25 +1,49 @@
 'use client';
-import { Container, Stack, Title } from '@mantine/core';
+import { Box, Button, Card, Container, Group, Stack, Text, Title } from '@mantine/core';
+import { ArrowLeft } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { lazy } from 'react';
 
 const ProfileForm = lazy(() => import('./ProfileForm'));
 const SecurityForm = lazy(() => import('./SecurityForm'));
-const ApiKeysForm = lazy(() => import('./ApiKeysForm'));
-const PrivacyDataForm = lazy(() => import('./PrivacyDataForm'));
-const PreferencesForm = lazy(() => import('./PreferencesForm'));
+// const ApiKeysForm = lazy(() => import('./ApiKeysForm'));
+// const PrivacyDataForm = lazy(() => import('./PrivacyDataForm'));
+// const PreferencesForm = lazy(() => import('./PreferencesForm'));
 
 export default function Profile() {
+  const router = useRouter();
+
   return (
-    <Container size="lg" py="xl">
-      <Stack>
-        <Title order={2} mb="md">
-          Configurações da Conta
-        </Title>
-        <ProfileForm />
-        <SecurityForm />
-        <ApiKeysForm />
-        <PrivacyDataForm />
-        <PreferencesForm />
+    <Container size="md">
+      <Stack gap="xl">
+        <Group h="100%">
+          <Button
+            variant="subtle"
+            color="gray"
+            leftSection={<ArrowLeft size={16} />}
+            onClick={() => router.back()}
+          >
+            Voltar
+          </Button>
+        </Group>
+        <Card padding="xl" radius="md" withBorder shadow="sm" style={{ background: '#FFFFFF' }}>
+          <Stack>
+            {/* Header */}
+            <Box>
+              <Title order={2} mb="xs" style={{ color: '#2E2E2E' }}>
+                Configurações do Perfil
+              </Title>
+              <Text c="#6E6E6E" size="sm" mb="md">
+                Gerencie suas informações pessoais, segurança da conta e preferências aqui.
+              </Text>
+            </Box>
+            <ProfileForm />
+            <SecurityForm />
+            {/* <ApiKeysForm /> */}
+            {/* <PrivacyDataForm /> */}
+            {/* <PreferencesForm /> */}
+          </Stack>
+        </Card>
       </Stack>
     </Container>
   );
@@ -73,5 +97,4 @@ export default function Profile() {
   QUICK REMARKS
   - Este componente é um scaffolding: implemente validações e limites no backend. Não confie só no frontend.
   - Mostre QR/secret one-time only. For extra safety, require re-authentication for high-risk actions.
-
 */
