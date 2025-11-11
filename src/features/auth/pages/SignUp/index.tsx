@@ -128,7 +128,11 @@ export function SignUp() {
       <Divider label="Ou continue com" labelPosition="center" my="lg" />
 
       <Group grow mb="md" mt="md">
-        <GoogleButton radius="xl" loading={isPending}>
+        <GoogleButton
+          radius="xl"
+          loading={isPending}
+          onClick={() => signIn('google', { callbackUrl: '/dashboard' })}
+        >
           Google
         </GoogleButton>
       </Group>

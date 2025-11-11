@@ -133,7 +133,11 @@ export function SignIn() {
       <Divider label="Ou continue com" labelPosition="center" my="lg" />
 
       <Group grow mb="md" mt="md">
-        <GoogleButton radius="xl" loading={loading}>
+        <GoogleButton
+          radius="xl"
+          loading={loading}
+          onClick={() => signIn('google', { callbackUrl: redirect as string })}
+        >
           Google
         </GoogleButton>
       </Group>
