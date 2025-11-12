@@ -1,5 +1,7 @@
+// BlingConnect.tsx
 'use client';
 import {
+  Alert,
   Box,
   Button,
   Container,
@@ -12,30 +14,64 @@ import {
   ThemeIcon,
   Title,
 } from '@mantine/core';
-import { CheckCircle2 } from 'lucide-react';
+import { AlertCircle, CheckCircle2 } from 'lucide-react';
 import Image from 'next/image';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { useBlingIntegration } from '@/hooks/useBlingIntegration';
 
-type ConnectionState = 'idle' | 'connecting' | 'analyzing' | 'complete';
+type ConnectionState = 'idle' | 'connecting' | 'analyzing' | 'complete' | 'error';
 
 export function BlingConnect() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { status, loading, connect } = useBlingIntegration();
+
   const [state, setState] = useState<ConnectionState>('idle');
   const [progress, setProgress] = useState(0);
+  const [error, setError] = useState<string | null>(null);
+
+  // Verificar parâmetros de URL para erros/sucesso
+  useEffect(() => {
+    const errorParam = searchParams.get('error');
+    const successParam = searchParams.get('success');
+
+    if (errorParam) {
+      setState('error');
+      switch (errorParam) {
+        case 'auth_failed':
+          setError('Falha na autenticação com o Bling. Tente novamente.');
+          break;
+        case 'connection_failed':
+          setError('Erro ao conectar com o Bling. Verifique suas credenciais.');
+          break;
+        case 'invalid_callback':
+          setError('Callback inválido do Bling. Tente novamente.');
+          break;
+        default:
+          setError('Erro desconhecido ao conectar com o Bling.');
+      }
+    }
+
+    if (successParam === 'bling_connected') {
+      setState('analyzing');
+      setProgress(50);
+    }
+  }, [searchParams]);
+
+  // Verificar se já está conectado
+  useEffect(() => {
+    if (status?.connected && state === 'idle') {
+      setState('complete');
+      setProgress(100);
+    }
+  }, [status, state]);
 
   const handleComplete = () => {
-    // Redirect to dashboard or perform any final actions
-    // console.log('Connection and analysis complete. Redirecting to dashboard...');
+    router.push('/dashboard');
   };
 
   useEffect(() => {
-    if (state === 'connecting') {
-      const timer = setTimeout(() => {
-        setState('analyzing');
-        setProgress(50);
-      }, 2000);
-      return () => clearTimeout(timer);
-    }
-
     if (state === 'analyzing') {
       const interval = setInterval(() => {
         setProgress((prev) => {
@@ -58,26 +94,60 @@ export function BlingConnect() {
     }
   }, [state]);
 
-  const handleConnect = () => {
-    setState('connecting');
-    setProgress(25);
+  const handleConnect = async () => {
+    try {
+      setState('connecting');
+      setError(null);
+      setProgress(25);
+
+      const authUrl = await connect();
+
+      // Redirecionar para a página de autorização do Bling
+      window.location.href = authUrl;
+    } catch (err) {
+      console.error('Error connecting to Bling:', err);
+      setState('error');
+      setError('Erro ao iniciar conexão com o Bling. Tente novamente.');
+    }
   };
 
   const getTitle = () => {
     if (state === 'idle') return 'Conectar com Bling';
     if (state === 'connecting') return 'Conectando...';
     if (state === 'analyzing') return 'Analisando produtos...';
+    if (state === 'error') return 'Erro na conexão';
     return 'Tudo pronto!';
   };
 
   const getDescription = () => {
     if (state === 'idle')
       return 'Conecte sua conta Bling via OAuth 2.0 para começar a análise inteligente do seu estoque.';
-    if (state === 'connecting') return 'Conectado ao Bling ✅ | Autenticando via OAuth...';
+    if (state === 'connecting') return 'Redirecionando para o Bling...';
     if (state === 'analyzing')
       return 'Analisando Produtos ⏳ | Importando dados dos últimos 7 dias para gerar valor rápido...';
+    if (state === 'error') return 'Houve um problema ao conectar com o Bling. Tente novamente.';
     return 'Conexão bem-sucedida! Seu dashboard estará pronto em breve. Você será notificado por e-mail.';
   };
+
+  // Se ainda está carregando o status da integração
+  if (loading && state === 'idle') {
+    return (
+      <Container>
+        <Paper
+          radius="lg"
+          p="xl"
+          withBorder
+          shadow="md"
+          style={{ width: '100%', background: '#FFFFFF' }}
+        >
+          <Stack gap="lg" align="center">
+            <Loader size="xl" />
+            <Text>Verificando status da integração...</Text>
+          </Stack>
+        </Paper>
+      </Container>
+    );
+  }
 
   return (
     <Container>
@@ -98,6 +168,17 @@ export function BlingConnect() {
               {getDescription()}
             </Text>
           </Box>
+
+          {error && (
+            <Alert
+              icon={<AlertCircle size={16} />}
+              title="Erro na conexão"
+              color="red"
+              variant="light"
+            >
+              {error}
+            </Alert>
+          )}
 
           {state === 'idle' && (
             <Stack gap="md">
@@ -124,7 +205,7 @@ export function BlingConnect() {
                   autenticação é feita diretamente com o Bling.
                 </Text>
               </Paper>
-              <Button onClick={handleConnect} fullWidth size="lg" color="green.9">
+              <Button onClick={handleConnect} fullWidth size="lg" color="green.9" loading={loading}>
                 Conectar com Bling (OAuth)
               </Button>
             </Stack>
@@ -148,6 +229,17 @@ export function BlingConnect() {
               <Text size="sm" c="dimmed" ta="center">
                 Redirecionando para o dashboard...
               </Text>
+            </Stack>
+          )}
+
+          {state === 'error' && (
+            <Stack gap="md" align="center">
+              <ThemeIcon size={64} radius="xl" color="red" variant="light">
+                <AlertCircle size={32} />
+              </ThemeIcon>
+              <Button onClick={handleConnect} fullWidth size="md" color="green.9">
+                Tentar novamente
+              </Button>
             </Stack>
           )}
         </Stack>

@@ -40,6 +40,7 @@ model User {
   auditLogs          AuditLog[]
   apiKeys            ApiKey[]
   securityIncidents  SecurityIncident[]
+  blingIntegration   BlingIntegration?
 
   @@index([email, createdAt, deletedAt])
 }
@@ -142,4 +143,91 @@ model DataRegistry {
   createdAt DateTime @default(now())
 
   @@index([createdAt])
+}
+
+// Integração com o Bling
+
+model BlingIntegration {
+  id     String @id @default(uuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Tokens OAuth
+  accessToken  String   @db.Text
+  refreshToken String   @db.Text
+  expiresAt    DateTime
+  tokenType    String
+  scope        String
+
+  // Metadados
+  connectedAt DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("bling_integrations")
+}
+
+model ProductAlert {
+  id          String    @id @default(uuid())
+  type        AlertType
+  productName String
+  sku         String    @unique
+  imageUrl    String?
+  category    String
+
+  // Rupture Risk
+  daysRemaining     Int?
+  stockAmount       Int?
+  vvd               Float? // Velocidade de Vendas Diárias
+  replenishmentTime Int? // Tempo de reposição (dias)
+  safetyDays        Int? // Dias de segurança
+
+  // Dead Stock
+  capitalTied       Float? // Capital imobilizado
+  daysSinceLastSale Int?
+  lastSaleDate      DateTime?
+  costPrice         Float?
+  sellingPrice      Float?
+
+  // Opportunity
+  salesGrowth      Float?
+  vvdLast7Days     Float?
+  vvdPrevious7Days Float?
+
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  blingProduct   BlingProduct? @relation(fields: [blingProductId], references: [id])
+  blingProductId String?
+
+  @@index([sku])
+  @@index([type])
+}
+
+// Tabelas auxiliares para cache de dados do Bling
+model BlingProduct {
+  id         String   @id @default(uuid())
+  blingId    String   @unique
+  sku        String   @unique
+  name       String
+  category   String?
+  price      Float?
+  costPrice  Float?
+  imageUrl   String?
+  lastSynced DateTime @default(now())
+
+  alerts ProductAlert[]
+}
+
+model BlingOrder {
+  id          String   @id @default(uuid())
+  blingId     String   @unique
+  orderNumber String
+  date        DateTime
+  total       Float
+  items       Json // Array de itens serializado
+}
+
+enum AlertType {
+  rupture
+  dead_stock
+  opportunity
 }
