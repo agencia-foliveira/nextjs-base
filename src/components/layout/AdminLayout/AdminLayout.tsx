@@ -11,7 +11,7 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <AppShell padding="md" header={{ height: { base: 60, md: 70, lg: 80 } }}>
-      <AppShell.Header style={{ background: '#FFFFFF', borderBottom: '1px solid #e0e0e0' }}>
+      <AppShell.Header>
         <AdminHeader />
       </AppShell.Header>
       <AppShell.Main>

@@ -59,13 +59,7 @@ export function ProductCard({ product, onGenerateCampaign }: ProductCardProps) {
   const Icon = style.icon;
 
   return (
-    <Card
-      padding="lg"
-      radius="md"
-      withBorder
-      shadow="sm"
-      style={{ height: '100%', background: '#FFFFFF' }}
-    >
+    <Card padding="lg" radius="md" withBorder shadow="sm" style={{ height: '100%' }}>
       <Stack gap="md" style={{ height: '100%' }}>
         {/* Header */}
         <Box>
@@ -90,13 +84,13 @@ export function ProductCard({ product, onGenerateCampaign }: ProductCardProps) {
             />
           )}
 
-          <Text lineClamp={2} mb={4} style={{ color: '#2E2E2E' }}>
+          <Text lineClamp={2} mb={4} fw={600}>
             {product.productName}
           </Text>
-          <Text size="sm" c="#6E6E6E">
+          <Text size="sm" c="dimmed">
             SKU: {product.sku}
           </Text>
-          <Text size="xs" c="#6E6E6E">
+          <Text size="xs" c="dimmed">
             Categoria: {product.category}
           </Text>
         </Box>
@@ -111,11 +105,11 @@ export function ProductCard({ product, onGenerateCampaign }: ProductCardProps) {
               </Text>
               <Group gap="xs" mb="xs">
                 <PackageIcon size={14} />
-                <Text size="xs" c="#6E6E6E">
+                <Text size="xs" c="dimmed">
                   Estoque atual: {product.stockAmount} unidades
                 </Text>
               </Group>
-              <Text size="xs" c="#6E6E6E" mb="xs">
+              <Text size="xs" c="dimmed" mb="xs">
                 VVD (Velocidade de Vendas): {product.vvd?.toFixed(2)} unid./dia
               </Text>
               <Paper
@@ -126,7 +120,7 @@ export function ProductCard({ product, onGenerateCampaign }: ProductCardProps) {
                   borderLeft: '3px solid #FA5252',
                 }}
               >
-                <Text size="xs" c="#6E6E6E" style={{ fontStyle: 'italic' }}>
+                <Text size="xs" c="dimmed" style={{ fontStyle: 'italic' }}>
                   ⚠️ Nota: Este cálculo pode ser impreciso se o produto ficou fora de estoque
                   recentemente. A VVD refinada será implementada na versão 2.0.
                 </Text>
@@ -144,17 +138,17 @@ export function ProductCard({ product, onGenerateCampaign }: ProductCardProps) {
               </Text>
               <Group gap="xs" mb="xs">
                 <Calendar size={14} />
-                <Text size="xs" c="#6E6E6E">
+                <Text size="xs" c="dimmed">
                   Última venda: {product.lastSaleDate ? formatDate(product.lastSaleDate) : 'N/A'}
                 </Text>
               </Group>
               <Group gap="xs" mb="xs">
                 <PackageIcon size={14} />
-                <Text size="xs" c="#6E6E6E">
+                <Text size="xs" c="dimmed">
                   Estoque atual: {product.stockAmount} unidades
                 </Text>
               </Group>
-              <Text size="xs" c="#6E6E6E">
+              <Text size="xs" c="dimmed">
                 Preço de custo: R$ {product.costPrice?.toFixed(2)} | Preço de venda: R${' '}
                 {product.sellingPrice?.toFixed(2)}
               </Text>
@@ -167,10 +161,10 @@ export function ProductCard({ product, onGenerateCampaign }: ProductCardProps) {
                 Este produto vendeu <strong>{product.salesGrowth}% mais</strong> nos últimos 7 dias
                 comparado aos 7 dias anteriores.
               </Text>
-              <Text size="xs" c="#6E6E6E" mb="xs">
+              <Text size="xs" c="dimmed" mb="xs">
                 VVD últimos 7 dias: {product.vvdLast7Days?.toFixed(1)} unid./dia
               </Text>
-              <Text size="xs" c="#6E6E6E">
+              <Text size="xs" c="dimmed">
                 VVD 7 dias anteriores: {product.vvdPrevious7Days?.toFixed(1)} unid./dia
               </Text>
               <Text size="xs" c="teal" mt="xs">
@@ -184,19 +178,9 @@ export function ProductCard({ product, onGenerateCampaign }: ProductCardProps) {
         {product.type === 'dead-stock' && (
           <Button
             fullWidth
-            color="gold"
+            color="brand"
             leftSection={<Sparkles size={16} />}
             onClick={onGenerateCampaign}
-            style={{
-              background: '#C7A446',
-            }}
-            styles={{
-              root: {
-                '&:hover': {
-                  background: '#A8872A',
-                },
-              },
-            }}
           >
             Gerar Campanha
           </Button>

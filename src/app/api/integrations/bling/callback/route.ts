@@ -1,39 +1,45 @@
 import { type NextRequest, NextResponse } from 'next/server';
+import { getServerSession } from 'next-auth';
 import { IntegrationService } from '@/lib/bling/integration-service';
+import { authOptions } from '@/lib/next-auth';
 
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
 
-    // console.log('[DEBUG] Bking Callback', searchParams.toString());
-
     const code = searchParams.get('code');
-    const state = searchParams.get('state'); // user ID
     const error = searchParams.get('error');
 
     if (error) {
       return NextResponse.redirect(
-        `${process.env.NEXTAUTH_URL}/dashboard/integrations?error=auth_failed&message=${error}`
+        `${process.env.NEXTAUTH_URL}/bling?error=auth_failed&message=${error}`
       );
     }
 
-    if (!code || !state) {
-      return NextResponse.redirect(
-        `${process.env.NEXTAUTH_URL}/dashboard/integrations?error=invalid_callback`
-      );
+    if (!code) {
+      return NextResponse.redirect(`${process.env.NEXTAUTH_URL}/bling?error=invalid_callback`);
+    }
+
+    const session = await getServerSession(authOptions);
+
+    if (!session?.user?.id) {
+      return NextResponse.redirect(`${process.env.NEXTAUTH_URL}/bling?error=unauthorized`);
     }
 
     // Trocar code por access token
+    const basicAuth = Buffer.from(
+      `${process.env.BLING_CLIENT_ID}:${process.env.BLING_CLIENT_SECRET}`
+    ).toString('base64');
+
     const tokenResponse = await fetch('https://www.bling.com.br/Api/v3/oauth/token', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
+        Authorization: `Basic ${basicAuth}`,
       },
       body: new URLSearchParams({
         grant_type: 'authorization_code',
         code,
-        client_id: process.env.BLING_CLIENT_ID!,
-        client_secret: process.env.BLING_CLIENT_SECRET!,
         redirect_uri: `${process.env.NEXTAUTH_URL}/api/integrations/bling/callback`,
       }),
     });
@@ -46,15 +52,11 @@ export async function GET(request: NextRequest) {
     const tokens = await tokenResponse.json();
 
     // Salvar integração no banco
-    await IntegrationService.connectBling(state, tokens);
+    await IntegrationService.connectBling(session?.user?.id, tokens);
 
-    return NextResponse.redirect(
-      `${process.env.NEXTAUTH_URL}/dashboard/integrations?success=bling_connected`
-    );
+    return NextResponse.redirect(`${process.env.NEXTAUTH_URL}/bling?success=bling_connected`);
   } catch (error) {
     console.error('Error in Bling callback:', error);
-    return NextResponse.redirect(
-      `${process.env.NEXTAUTH_URL}/dashboard/integrations?error=connection_failed`
-    );
+    return NextResponse.redirect(`${process.env.NEXTAUTH_URL}/bling?error=connection_failed`);
   }
 }

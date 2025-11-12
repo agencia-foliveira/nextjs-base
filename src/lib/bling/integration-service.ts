@@ -12,7 +12,13 @@ export interface BlingIntegration {
 }
 
 export class IntegrationService {
-  // Conectar conta Bling
+  /**
+   * Conectar conta Bling
+   *
+   * @param userId
+   * @param tokens
+   * @returns {Promise<BlingIntegration>}
+   */
   static async connectBling(
     userId: string,
     tokens: {
@@ -44,7 +50,6 @@ export class IntegrationService {
       },
     });
 
-    // Registrar auditoria
     await prisma.auditLog.create({
       data: {
         userId,
@@ -56,7 +61,12 @@ export class IntegrationService {
     return IntegrationService.mapToBlingIntegration(integration);
   }
 
-  // Desconectar conta Bling
+  /**
+   * Desconectar conta Bling
+   *
+   * @param userId
+   * @returns {Promise<void>}
+   */
   static async disconnectBling(userId: string): Promise<void> {
     await prisma.blingIntegration.delete({
       where: { userId },
@@ -71,7 +81,11 @@ export class IntegrationService {
     });
   }
 
-  // Obter integração Bling do usuário
+  /**
+   * Obter integração Bling do usuário
+   * @param userId
+   * @returns {Promise<BlingIntegration | null>}
+   */
   static async getBlingIntegration(userId: string): Promise<BlingIntegration | null> {
     const integration = await prisma.blingIntegration.findUnique({
       where: { userId },
@@ -80,7 +94,11 @@ export class IntegrationService {
     return integration ? IntegrationService.mapToBlingIntegration(integration) : null;
   }
 
-  // Verificar se token é válido
+  /**
+   * Verificar se o token Bling é válido
+   * @param userId
+   * @returns {Promise<boolean>}
+   */
   static async isBlingTokenValid(userId: string): Promise<boolean> {
     const integration = await prisma.blingIntegration.findUnique({
       where: { userId },
@@ -92,7 +110,56 @@ export class IntegrationService {
     return integration.expiresAt > new Date(Date.now() + 5 * 60 * 1000);
   }
 
-  // Atualizar tokens
+  /**
+   * Obter tokens válidos, atualizando se necessário
+   * @param userId
+   * @returns {Promise<BlingIntegration>}
+   */
+  static async getValidBlingTokens(userId: string): Promise<BlingIntegration> {
+    const integration = await IntegrationService.getBlingIntegration(userId);
+    if (!integration) throw new Error('Bling integration not found');
+
+    const expiresIn = integration.expires_at * 1000 - Date.now();
+    if (expiresIn < 5 * 60 * 1000) {
+      return IntegrationService.fetchAndRefreshBlingTokens(userId);
+    }
+
+    return integration;
+  }
+
+  /**
+   * Obter integração Bling do usuário
+   * @param userId - ID do usuário da sessão atual
+   * @param endpoint - Endpoint da API do Bling (ex: /produtos)
+   * @param options - Opções da requisição (método, headers, body, etc.)
+   * @returns {Promise<any>}
+   */
+  static async request(userId: string, endpoint: string, options: RequestInit = {}) {
+    const { access_token } = await IntegrationService.getValidBlingTokens(userId);
+
+    const res = await fetch(`https://www.bling.com.br/Api/v3${endpoint}`, {
+      ...options,
+      headers: {
+        ...(options.headers || {}),
+        Authorization: `Bearer ${access_token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!res.ok) {
+      const text = await res.text();
+      throw new Error(`Bling API Error (${res.status}): ${text}`);
+    }
+
+    return res.json();
+  }
+
+  /**
+   * Atualizar os tokens Bling no banco de dados
+   * @param userId
+   * @param newTokens
+   * @returns
+   */
   static async refreshBlingTokens(
     userId: string,
     newTokens: {
@@ -117,6 +184,52 @@ export class IntegrationService {
     return IntegrationService.mapToBlingIntegration(integration);
   }
 
+  /**
+   * Buscar e atualizar tokens Bling usando o refresh token
+   * @param userId
+   * @returns
+   */
+  static async fetchAndRefreshBlingTokens(userId: string): Promise<BlingIntegration> {
+    const integration = await prisma.blingIntegration.findUnique({ where: { userId } });
+    if (!integration) throw new Error('Integration not found');
+
+    const basicAuth = Buffer.from(
+      `${process.env.BLING_CLIENT_ID}:${process.env.BLING_CLIENT_SECRET}`
+    ).toString('base64');
+
+    const response = await fetch('https://www.bling.com.br/Api/v3/oauth/token', {
+      method: 'POST',
+      headers: {
+        Authorization: `Basic ${basicAuth}`,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: new URLSearchParams({
+        grant_type: 'refresh_token',
+        refresh_token: integration.refreshToken,
+      }),
+    });
+
+    if (!response.ok) {
+      const text = await response.text();
+      throw new Error(`Failed to refresh Bling token: ${text}`);
+    }
+
+    const data = await response.json();
+
+    return IntegrationService.refreshBlingTokens(userId, {
+      access_token: data.access_token,
+      refresh_token: data.refresh_token ?? integration.refreshToken,
+      expires_in: data.expires_in,
+      token_type: data.token_type,
+      scope: data.scope,
+    });
+  }
+
+  /**
+   * Mapear integração do Prisma para o formato BlingIntegration
+   * @param integration
+   * @returns
+   */
   private static mapToBlingIntegration(integration: any): BlingIntegration {
     return {
       id: integration.id,

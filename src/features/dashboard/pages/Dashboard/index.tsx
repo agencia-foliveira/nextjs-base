@@ -15,13 +15,16 @@ import { Filter, Package, Sparkles } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { BlingConnectBanner } from '@/features/bling/components/BlingConnectBanner';
+import { useBlingIntegration } from '@/hooks/useBlingIntegration';
 import { mockProducts } from '@/mock';
 import type { ProductAlert } from '@/types';
 import { ProductCard } from '../../components/ProductCard';
 
 export function Dashboard() {
+  const { status, loading } = useBlingIntegration();
   const [filter, setFilter] = useState<string | null>('all');
   const router = useRouter();
+
   const criticalLimitDays = 30;
 
   const filteredProducts =
@@ -45,17 +48,15 @@ export function Dashboard() {
 
   return (
     <Stack gap="xl">
-      <BlingConnectBanner />
+      {!loading && !status?.connected && <BlingConnectBanner />}
 
       {/* Summary Cards */}
       <SimpleGrid cols={{ base: 1, sm: 3 }}>
-        <Card padding="lg" radius="md" withBorder shadow="sm" style={{ background: '#FFFFFF' }}>
+        <Card padding="lg" radius="md" withBorder shadow="sm">
           <Group justify="space-between">
             <Box>
-              <Text size="sm" c="#6E6E6E">
-                Alertas Críticos
-              </Text>
-              <Title order={2} mt="xs" style={{ color: '#2E2E2E' }}>
+              <Text size="sm">Alertas Críticos</Text>
+              <Title order={2} mt="xs">
                 {criticalCount}
               </Title>
             </Box>
@@ -65,13 +66,11 @@ export function Dashboard() {
           </Group>
         </Card>
 
-        <Card padding="lg" radius="md" withBorder shadow="sm" style={{ background: '#FFFFFF' }}>
+        <Card padding="lg" radius="md" withBorder shadow="sm">
           <Group justify="space-between">
             <Box>
-              <Text size="sm" c="#6E6E6E">
-                Total de Produtos
-              </Text>
-              <Title order={2} mt="xs" style={{ color: '#2E2E2E' }}>
+              <Text size="sm">Total de Produtos</Text>
+              <Title order={2} mt="xs">
                 {mockProducts.length}
               </Title>
             </Box>
@@ -81,13 +80,11 @@ export function Dashboard() {
           </Group>
         </Card>
 
-        <Card padding="lg" radius="md" withBorder shadow="sm" style={{ background: '#FFFFFF' }}>
+        <Card padding="lg" radius="md" withBorder shadow="sm">
           <Group justify="space-between">
             <Box>
-              <Text size="sm" c="#6E6E6E">
-                Oportunidades
-              </Text>
-              <Title order={2} mt="xs" style={{ color: '#2E2E2E' }}>
+              <Text size="sm">Oportunidades</Text>
+              <Title order={2} mt="xs">
                 {mockProducts.filter((p) => p.type === 'opportunity').length}
               </Title>
             </Box>
@@ -100,9 +97,7 @@ export function Dashboard() {
 
       {/* Filters */}
       <Group mb="lg" align="center">
-        <Text size="sm" c="#6E6E6E">
-          Mostrando:
-        </Text>
+        <Text size="sm">Mostrando:</Text>
         <Tabs value={filter} onChange={setFilter} color="gold">
           <Tabs.List>
             <Tabs.Tab value="all">Todos</Tabs.Tab>
@@ -144,7 +139,7 @@ export function Dashboard() {
           <ThemeIcon size={48} radius="xl" variant="light" color="gray" mx="auto" mb="md">
             <Package size={24} />
           </ThemeIcon>
-          <Text c="#6E6E6E">Nenhum produto encontrado com os filtros aplicados.</Text>
+          <Text>Nenhum produto encontrado com os filtros aplicados.</Text>
         </Box>
       )}
     </Stack>

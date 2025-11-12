@@ -26,14 +26,14 @@ export default function Profile() {
             Voltar
           </Button>
         </Group>
-        <Card padding="xl" radius="md" withBorder shadow="sm" style={{ background: '#FFFFFF' }}>
+        <Card padding="xl" radius="md" withBorder shadow="sm">
           <Stack>
             {/* Header */}
             <Box>
-              <Title order={2} mb="xs" style={{ color: '#2E2E2E' }}>
+              <Title order={2} mb="xs">
                 Configurações do Perfil
               </Title>
-              <Text c="#6E6E6E" size="sm" mb="md">
+              <Text size="sm" mb="md">
                 Gerencie suas informações pessoais, segurança da conta e preferências aqui.
               </Text>
             </Box>

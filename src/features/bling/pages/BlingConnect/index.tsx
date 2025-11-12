@@ -133,13 +133,7 @@ export function BlingConnect() {
   if (loading && state === 'idle') {
     return (
       <Container>
-        <Paper
-          radius="lg"
-          p="xl"
-          withBorder
-          shadow="md"
-          style={{ width: '100%', background: '#FFFFFF' }}
-        >
+        <Paper radius="lg" p="xl" withBorder shadow="md" style={{ width: '100%' }}>
           <Stack gap="lg" align="center">
             <Loader size="xl" />
             <Text>Verificando status da integração...</Text>
@@ -151,20 +145,14 @@ export function BlingConnect() {
 
   return (
     <Container>
-      <Paper
-        radius="lg"
-        p="xl"
-        withBorder
-        shadow="md"
-        style={{ width: '100%', background: '#FFFFFF' }}
-      >
+      <Paper radius="lg" p="xl" withBorder shadow="md" style={{ width: '100%' }}>
         <Stack gap="lg">
           <Box style={{ textAlign: 'center' }}>
             <Image src="/img/bling-logo.png" alt="Bling Logo" width={180} height={70} />
-            <Title order={2} ta="center" style={{ color: '#2E2E2E' }}>
+            <Title order={2} ta="center">
               {getTitle()}
             </Title>
-            <Text c="#6E6E6E" size="sm" ta="center" mt="sm">
+            <Text size="sm" ta="center" mt="sm">
               {getDescription()}
             </Text>
           </Box>
@@ -182,11 +170,11 @@ export function BlingConnect() {
 
           {state === 'idle' && (
             <Stack gap="md">
-              <Paper p="md" withBorder style={{ backgroundColor: '#F5F5F5' }}>
-                <Text size="sm" mb="xs" c="#C7A446">
+              <Paper p="md" withBorder>
+                <Text size="sm" mb="xs" c="brand">
                   O que você ganhará:
                 </Text>
-                <List size="sm" spacing="xs" style={{ color: '#6E6E6E' }}>
+                <List size="sm" spacing="xs">
                   <List.Item>
                     🚨 Alertas de risco de ruptura de estoque (VVD simplificada)
                   </List.Item>
@@ -200,7 +188,7 @@ export function BlingConnect() {
                 withBorder
                 style={{ backgroundColor: 'rgba(199, 164, 70, 0.1)', borderColor: '#C7A446' }}
               >
-                <Text size="xs" c="#6E6E6E">
+                <Text size="xs" c="brand">
                   🔒 <strong>Conexão segura via OAuth 2.0</strong> - Não pedimos sua chave de API. A
                   autenticação é feita diretamente com o Bling.
                 </Text>
@@ -213,8 +201,8 @@ export function BlingConnect() {
 
           {(state === 'connecting' || state === 'analyzing') && (
             <Stack gap="md" align="center">
-              <Loader size="xl" type="dots" />
-              <Progress value={progress} size="lg" radius="xl" w="100%" animated />
+              <Loader size="xl" color="green.9" type="dots" />
+              <Progress value={progress} size="lg" color="green.9" radius="xl" w="100%" animated />
               <Text size="sm" c="dimmed">
                 {Math.round(progress)}% completo
               </Text>

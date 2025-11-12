@@ -4,7 +4,7 @@ import { AppShell, Center, Container, Group, Loader, Skeleton } from '@mantine/c
 export function AdminLayoutSkeleton() {
   return (
     <AppShell padding="md" header={{ height: { base: 60, md: 70, lg: 80 } }}>
-      <AppShell.Header style={{ background: '#FFFFFF', borderBottom: '1px solid #e0e0e0' }}>
+      <AppShell.Header>
         <Container size="xl" h="100%">
           <Group h="100%" px="md" justify="space-between">
             <Skeleton height={40} width={200} radius="md" />
