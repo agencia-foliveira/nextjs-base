@@ -26,21 +26,27 @@ export function BlingConnectBanner() {
           para sincronizar produtos e pedidos.
         </Text>
         <Button
-          color="green.9"
           size={isMobile ? 'md' : 'lg'}
+          variant="outline"
+          color="white"
           radius="md"
           fullWidth={isMobile}
-          rightSection={<Image src="/img/bling-logo.png" alt="Bling Logo" width={90} height={35} />}
+          rightSection={
+            <Image src="/img/bling-logo-white.png" alt="Bling Logo" width={81} height={41} />
+          }
           onClick={() => router.push('/bling')}
-          styles={{
+          styles={(theme) => ({
             root: {
               fontWeight: 600,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               gap: 8,
+              '&:hover': {
+                backgroundColor: theme.colors.green[2],
+              },
             },
-          }}
+          })}
         >
           Conectar
         </Button>
