@@ -3,24 +3,10 @@ import { Alert, Button, Stack, Text } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
 
 export function BlingConnectBanner() {
-  const [showBlingBanner, setShowBlingBanner] = useState(false);
   const isMobile = useMediaQuery('(max-width: 768px)');
   const router = useRouter();
-
-  useEffect(() => {
-    const hasConectedBling = localStorage.getItem('BLING_CONNECTED');
-
-    if (!hasConectedBling) {
-      setShowBlingBanner(true);
-    } else {
-      setShowBlingBanner(false);
-    }
-  }, []);
-
-  if (!showBlingBanner) return null;
 
   return (
     <Alert color="green.9" variant="filled" radius="md" p="lg" mb="xl">
@@ -39,9 +25,7 @@ export function BlingConnectBanner() {
           </Text>{' '}
           para sincronizar produtos e pedidos.
         </Text>
-
         <Button
-          variant={isMobile ? 'white' : 'white'}
           color="green.9"
           size={isMobile ? 'md' : 'lg'}
           radius="md"
