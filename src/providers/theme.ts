@@ -9,16 +9,16 @@ export const theme = createTheme({
   headings: { fontFamily: 'Roboto, sans-serif' },
   colors: {
     brand: [
-      '#f3f0ff',
-      '#e5dbff',
-      '#d0bfff',
-      '#b197fc',
-      '#9775fa',
-      '#845ef7',
-      '#7950f2',
-      '#7048e8',
-      '#6741d9',
-      '#5f3dc4',
+      '#fdf7e6',
+      '#f5edd6',
+      '#e8d9b1',
+      '#dbc588',
+      '#d0b366',
+      '#c9a84f',
+      '#c7a446',
+      '#C7A446',
+      '#9b7d2a',
+      '#876c1d',
     ],
   },
   fontSizes: {
@@ -72,5 +72,15 @@ export const theme = createTheme({
     },
 
     Loader: Loader.extend({}),
+  },
+  other: {
+    colors: {
+      bling: '#288F4E',
+      goldDark: '#A8872A',
+      blackSoft: '#2E2E2E',
+      grayNeutral: '#6E6E6E',
+      grayLight: '#F5F5F5',
+      blueTech: '#1E90FF',
+    },
   },
 });

@@ -15,8 +15,9 @@ import {
 import { useForm } from '@mantine/form';
 import { zod4Resolver } from 'mantine-form-zod-resolver';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { GoogleButton } from '@/components/commons/GoogleButton';
 import { useQueryString } from '@/hooks';
 import { TwoFactorQRCode } from '../../components/TwoFactorQRCode';
@@ -25,10 +26,11 @@ import { SignInSchema } from '../../services';
 
 export function SignIn() {
   const [loading, setLoading] = useState(false);
-  const { required2FA } = useAuth();
+  const { required2FA, status } = useAuth();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const { getQueryParam } = useQueryString();
   const redirect = getQueryParam('redirect') || '/dashboard';
+  const router = useRouter();
 
   const form = useForm({
     initialValues: {
@@ -56,6 +58,12 @@ export function SignIn() {
       setErrorMessage('E-mail ou senha inválidos');
     }
   };
+
+  useEffect(() => {
+    if (status === 'authenticated' && !required2FA) {
+      router.push(redirect as string);
+    }
+  }, [status, required2FA, router, redirect]);
 
   if (required2FA)
     return (
@@ -87,6 +95,7 @@ export function SignIn() {
           <TextInput
             label="E-mail"
             placeholder="email@exemplo.com"
+            disabled={loading}
             value={form.values.email}
             onChange={(event) => form.setFieldValue('email', event.currentTarget.value)}
             error={form.errors.email}
@@ -96,6 +105,7 @@ export function SignIn() {
           <PasswordInput
             label="Senha"
             placeholder="Sua senha"
+            disabled={loading}
             value={form.values.password}
             onChange={(event) => form.setFieldValue('password', event.currentTarget.value)}
             error={form.errors.password}
@@ -105,6 +115,7 @@ export function SignIn() {
           <Checkbox
             label="Manter-me conectado"
             checked={form.values.remember}
+            disabled={loading}
             onChange={(event) => form.setFieldValue('remember', event.currentTarget.checked)}
           />
         </Stack>
@@ -122,7 +133,11 @@ export function SignIn() {
       <Divider label="Ou continue com" labelPosition="center" my="lg" />
 
       <Group grow mb="md" mt="md">
-        <GoogleButton radius="xl" loading={loading}>
+        <GoogleButton
+          radius="xl"
+          loading={loading}
+          onClick={() => signIn('google', { callbackUrl: redirect as string })}
+        >
           Google
         </GoogleButton>
       </Group>

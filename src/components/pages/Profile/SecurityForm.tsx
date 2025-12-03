@@ -68,12 +68,12 @@ export default function SecurityForm() {
 
   return (
     <>
-      <Card shadow="sm">
+      <Card withBorder>
         <Title id="security" order={4}>
           Segurança
         </Title>
         <Divider my="sm" />
-        <Stack>
+        <Stack gap="lg">
           <form onSubmit={passwordForm.onSubmit(handlePasswordChange)}>
             <PasswordInput label="Senha atual" {...passwordForm.getInputProps('currentPassword')} />
             <PasswordInput label="Nova senha" {...passwordForm.getInputProps('newPassword')} />
@@ -96,15 +96,39 @@ export default function SecurityForm() {
             />
           </Group>
 
-          <Group>
+          <Group justify="space-between">
             <Text>Atividades de login</Text>
-            <Button variant="outline" onClick={() => signOutAllSessions()}>
+            <Button variant="outline" color="red.7" onClick={() => signOutAllSessions()}>
               Encerrar todas as sessões
             </Button>
           </Group>
 
           <Table highlightOnHover>
-            <thead>
+            <Table.Thead>
+              <Table.Tr>
+                <Table.Th>Horário</Table.Th>
+                <Table.Th>IP</Table.Th>
+                <Table.Th>Dispositivo</Table.Th>
+                <Table.Th>Sucesso</Table.Th>
+              </Table.Tr>
+            </Table.Thead>
+            <Table.Tbody>
+              {loginActivities.map((a) => (
+                <Table.Tr key={a.id}>
+                  <Table.Td>{new Date(a.createdAt).toLocaleString()}</Table.Td>
+                  <Table.Td>{a.ip}</Table.Td>
+                  <Table.Td>{a.device}</Table.Td>
+                  <Table.Td>
+                    {a.successful ? (
+                      <Badge color="green">OK</Badge>
+                    ) : (
+                      <Badge color="red">Falha</Badge>
+                    )}
+                  </Table.Td>
+                </Table.Tr>
+              ))}
+            </Table.Tbody>
+            {/* <thead>
               <tr>
                 <th>Horário</th>
                 <th>IP</th>
@@ -127,7 +151,7 @@ export default function SecurityForm() {
                   </td>
                 </tr>
               ))}
-            </tbody>
+            </tbody> */}
           </Table>
         </Stack>
       </Card>

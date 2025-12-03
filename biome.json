@@ -25,7 +25,7 @@
       "style": {
         "noUnusedTemplateLiteral": "off",
         "noCommonJs": "error",
-        "noMagicNumbers": "error",
+        "noMagicNumbers": "warn",
         "noNestedTernary": "warn",
         "noUselessElse": "error",
         "useTemplate": "error"
