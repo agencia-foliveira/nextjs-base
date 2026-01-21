@@ -1,0 +1,59 @@
+/*
+ * Configuração para coexistência Tailwind + Mantine
+ * 
+ * Quando precisar usar Tailwind junto com Mantine (migração gradual),
+ * adicione este arquivo ao projeto para evitar conflitos.
+ */
+
+/* Reset de conflitos comuns */
+@layer base {
+  /* 
+   * Mantine usa rem baseado em 16px.
+   * Se Tailwind estiver usando outro base, ajuste aqui.
+   */
+  :root {
+    font-size: 16px;
+  }
+
+  /*
+   * Garante que componentes Mantine não herdem
+   * estilos de reset agressivos do Tailwind
+   */
+  .mantine-focus-auto:focus-visible {
+    outline: 2px solid var(--mantine-primary-color-filled);
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  /*
+   * Classes utilitárias para usar tokens Mantine no Tailwind
+   * Exemplo: class="bg-mantine-blue-6"
+   */
+  .bg-mantine-blue-6 {
+    background-color: var(--mantine-color-blue-6);
+  }
+
+  .text-mantine-dimmed {
+    color: var(--mantine-color-dimmed);
+  }
+
+  .shadow-mantine-sm {
+    box-shadow: var(--mantine-shadow-sm);
+  }
+
+  .shadow-mantine-md {
+    box-shadow: var(--mantine-shadow-md);
+  }
+}
+
+/*
+ * Tailwind preflight pode conflitar com Mantine.
+ * Se necessário, desabilite preflight no tailwind.config.js:
+ * 
+ * module.exports = {
+ *   corePlugins: {
+ *     preflight: false,
+ *   },
+ * }
+ */

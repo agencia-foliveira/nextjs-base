@@ -36,7 +36,7 @@ export async function POST(req: NextRequest) {
 
     const resetToken = crypto.randomBytes(PASSWORD_RESET_TOKEN_BYTES).toString('hex');
     const resetTokenExpiry = new Date(Date.now() + PASSWORD_RESET_TOKEN_EXPIRY);
-    const resetLink = `${process.env.NEXT_PUBLIC_BASE_URL}/reset-password?token=${resetToken}`;
+    const resetLink = `${process.env.NEXT_PUBLIC_APP_URL}/alterar-senha?token=${resetToken}`;
 
     await sendEmail({
       toName: user.name || 'Usuário',
@@ -67,7 +67,7 @@ export async function POST(req: NextRequest) {
       { status: 200 }
     );
   } catch (err) {
-    console.error('Erro em /api/forgot-password:', err);
+    console.error('Erro em /api/esqueci-minha-senha:', err);
     return NextResponse.json({ error: 'Erro interno do servidor' }, { status: 500 });
   }
 }

@@ -1,8 +1,9 @@
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
-import { UserRole } from '@prisma/client';
+import { type PlanTier, UserRole } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import type { AuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
+import GoogleProvider from 'next-auth/providers/google';
 import { authenticator } from 'otplib';
 import {
   LOCK_OUT_DURATION_MINUTES,
@@ -16,8 +17,8 @@ export const authOptions: AuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
 
   pages: {
-    signIn: '/sign-in',
-    error: '/sign-in?error=invalid_credentials',
+    signIn: '/login',
+    error: '/login?error=invalid_credentials',
   },
 
   session: {
@@ -87,9 +88,12 @@ export const authOptions: AuthOptions = {
         // Se o usuário tem 2FA ativo, o código deve estar presente
         if (user.isTwoFactorEnabled) {
           if (!credentials.code) {
-            // etapa 1: senha válida, mas falta o segundo fator
-            // aqui você não cria sessão ainda
-            return { id: user.id, role: UserRole.GUEST, required2FA: true };
+            return {
+              id: user.id,
+              role: UserRole.GUEST,
+              required2FA: true,
+              onboardingCompleted: user.onboardingCompleted,
+            };
           }
 
           const isCodeValid = authenticator.verify({
@@ -137,36 +141,202 @@ export const authOptions: AuthOptions = {
           name: user.name,
           email: user.email,
           role: user.role,
-          avatar: user.avatar,
+          image: user.image,
+          onboardingCompleted: user.onboardingCompleted,
           required2FA: false,
+          planTier: user.planTier as PlanTier,
+        };
+      },
+    }),
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      profile(profile) {
+        return {
+          id: profile.sub,
+          name: profile.name,
+          email: profile.email,
+          image: profile.picture,
+          role: UserRole.USER,
+          onboardingCompleted: false,
+          planTier: 'FREE' as PlanTier,
         };
       },
     }),
   ],
+
   callbacks: {
-    async jwt({ token, user }) {
-      if (user) {
+    async signIn({ user, account, profile }) {
+      // Bloquear login se o email não for verificado pelo Google
+      if (account?.provider === 'google' && !profile?.email) {
+        throw new Error('Email não verificado pelo Google');
+      }
+
+      // Para usuários OAuth (Google)
+      if (account?.provider === 'google') {
+        try {
+          const existingUser = await prisma.user.findUnique({
+            where: { email: user.email! },
+          });
+
+          // Verificar se usuário existe e está ativo
+          if (existingUser) {
+            if (existingUser.deletedAt) {
+              throw new Error('Conta desativada. Entre em contato com o suporte.');
+            }
+
+            if (existingUser.lockedUntil && existingUser.lockedUntil > new Date()) {
+              throw new Error('Conta bloqueada. Tente novamente mais tarde.');
+            }
+
+            // Atualizar dados do usuário existente
+            await prisma.user.update({
+              where: { id: existingUser.id },
+              data: {
+                name: user.name || existingUser.name,
+                image: user.image || existingUser.image,
+                emailVerified: new Date(),
+                failedAttempts: 0,
+                lockedUntil: null,
+              },
+            });
+
+            // Registrar auditoria
+            await prisma.auditLog.create({
+              data: {
+                userId: existingUser.id,
+                action: 'OAUTH_LOGIN',
+                resource: 'User',
+              },
+            });
+          } else {
+            // Novo usuário será criado pelo adapter do NextAuth
+            // O audit log será criado no jwt callback
+          }
+
+          return true;
+        } catch (error) {
+          console.error('Error in Google signIn:', error);
+          return false;
+        }
+      }
+
+      // Para credentials, permitir login normalmente
+      return true;
+    },
+
+    async jwt({ token, user, account, trigger }) {
+      // Primeiro login com OAuth
+      if (account?.provider === 'google' && user) {
+        try {
+          // Buscar usuário completo (já criado pelo adapter)
+          const dbUser = await prisma.user.findUnique({
+            where: { email: user.email! },
+          });
+
+          if (dbUser) {
+            token.id = dbUser.id;
+            token.role = dbUser.role;
+            token.image = dbUser.image;
+            token.onboardingCompleted = dbUser.onboardingCompleted;
+            token.planTier = dbUser.planTier as PlanTier;
+
+            // Criar audit log para novo usuário OAuth
+            if (!token.auditCreated) {
+              await prisma.auditLog.create({
+                data: {
+                  userId: dbUser.id,
+                  action: 'SIGN_UP',
+                  resource: 'User',
+                },
+              });
+              token.auditCreated = true;
+            }
+          }
+        } catch (error) {
+          console.error('Error in JWT callback for OAuth:', error);
+        }
+      }
+      // Login com credentials
+      else if (user) {
         token.id = user.id;
         token.name = user.name;
         token.email = user.email;
         token.role = user.role;
-        token.avatar = user.avatar;
+        token.image = user.image;
+        token.onboardingCompleted = user.onboardingCompleted;
         token.required2FA = user.required2FA;
+        token.planTier = user.planTier;
+
+        // Fetch additional user data
+        const dbUser = await prisma.user.findUnique({
+          where: { id: user.id },
+        });
+
+        if (dbUser) {
+          token.planTier = dbUser.planTier as PlanTier;
+        }
       }
+
+      // Atualizar sessão se necessário
+      if (trigger === 'update') {
+        const updatedUser = await prisma.user.findUnique({
+          where: { id: token.id as string },
+        });
+
+        if (updatedUser) {
+          token.name = updatedUser.name;
+          token.image = updatedUser.image;
+          token.role = updatedUser.role;
+          token.onboardingCompleted = updatedUser.onboardingCompleted;
+          token.planTier = updatedUser.planTier as PlanTier;
+        }
+      }
+
       return token;
     },
+
     async session({ session, token }) {
       if (token) {
         session.user = {
-          id: token.id,
+          id: token.id as string,
           name: token.name,
           email: token.email,
-          role: token.role,
-          avatar: token.avatar,
+          role: token.role as UserRole,
+          image: token.image as string,
+          onboardingCompleted: token.onboardingCompleted as boolean,
+          planTier: (token.planTier as PlanTier) ?? 'FREE',
         };
-        session.required2FA = token.required2FA;
+        session.required2FA = token.required2FA as boolean;
       }
       return session;
+    },
+  },
+
+  events: {
+    async signIn({ user, account }) {
+      // Registrar login activity para OAuth (não capturado no authorize)
+      if (account?.provider === 'google') {
+        await prisma.loginActivity.create({
+          data: {
+            userId: user.id,
+            ip: 'unknown', // NextAuth não fornece IP no evento
+            device: 'unknown',
+            successful: true,
+          },
+        });
+      }
+    },
+    async createUser({ user }) {
+      // Audit log para novo usuário OAuth será criado no JWT callback
+      // para garantir que temos o ID do usuário
+      await prisma.auditLog.create({
+        data: {
+          userId: user.id,
+          action: 'SIGN_UP',
+          resource: 'User',
+        },
+      });
     },
   },
 };

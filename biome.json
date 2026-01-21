@@ -7,7 +7,14 @@
   },
   "files": {
     "ignoreUnknown": true,
-    "includes": ["src/**/*", "!*.json", "!.next/**/*", "!node_modules/**/*"]
+    "includes": [
+      "src/**/*",
+      "next.config.*",
+      "prisma.config.*",
+      "!*.json",
+      "!.next/**/*",
+      "!node_modules/**/*"
+    ]
   },
   "formatter": {
     "enabled": true,
@@ -25,7 +32,7 @@
       "style": {
         "noUnusedTemplateLiteral": "off",
         "noCommonJs": "error",
-        "noMagicNumbers": "error",
+        "noMagicNumbers": "warn",
         "noNestedTernary": "warn",
         "noUselessElse": "error",
         "useTemplate": "error"

@@ -1,25 +1,69 @@
 'use client';
-import { Container, Stack, Title } from '@mantine/core';
+import { Badge, Box, Button, Card, Container, Group, Stack, Text, Title } from '@mantine/core';
+import { ArrowLeft } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import { lazy } from 'react';
+import { openCheckout, openPortal } from '@/features/billing/services/stripeClient';
 
 const ProfileForm = lazy(() => import('./ProfileForm'));
 const SecurityForm = lazy(() => import('./SecurityForm'));
-const ApiKeysForm = lazy(() => import('./ApiKeysForm'));
-const PrivacyDataForm = lazy(() => import('./PrivacyDataForm'));
-const PreferencesForm = lazy(() => import('./PreferencesForm'));
+// const ApiKeysForm = lazy(() => import('./ApiKeysForm'));
+// const PrivacyDataForm = lazy(() => import('./PrivacyDataForm'));
+// const PreferencesForm = lazy(() => import('./PreferencesForm'));
 
 export default function Profile() {
+  const router = useRouter();
+  const { data } = useSession();
+  const plan = data?.user?.planTier ?? 'FREE';
+  const isPro = plan === 'PRO';
+
   return (
-    <Container size="lg" py="xl">
-      <Stack>
-        <Title order={2} mb="md">
-          Configurações da Conta
-        </Title>
-        <ProfileForm />
-        <SecurityForm />
-        <ApiKeysForm />
-        <PrivacyDataForm />
-        <PreferencesForm />
+    <Container size="md">
+      <Stack gap="xl">
+        <Group h="100%">
+          <Button
+            variant="subtle"
+            color="gray"
+            leftSection={<ArrowLeft size={16} />}
+            onClick={() => router.back()}
+          >
+            Voltar
+          </Button>
+        </Group>
+        <Card padding="xl" radius="md" withBorder shadow="sm">
+          <Stack>
+            {/* Header */}
+            <Box>
+              <Title order={2} mb="xs">
+                Configurações do Perfil
+              </Title>
+              <Group gap="sm" mb="md">
+                <Text size="sm">
+                  Gerencie suas informações pessoais, segurança da conta e preferências aqui.
+                </Text>
+                <Badge color={isPro ? 'green' : 'gray'} variant={isPro ? 'light' : 'outline'}>
+                  Plano {plan}
+                </Badge>
+              </Group>
+              <Group gap="sm">
+                {!isPro && (
+                  <Button onClick={openCheckout} color="brand">
+                    Fazer upgrade para PRO
+                  </Button>
+                )}
+                <Button variant="light" onClick={openPortal}>
+                  Gerenciar assinatura
+                </Button>
+              </Group>
+            </Box>
+            <ProfileForm />
+            <SecurityForm />
+            {/* <ApiKeysForm /> */}
+            {/* <PrivacyDataForm /> */}
+            {/* <PreferencesForm /> */}
+          </Stack>
+        </Card>
       </Stack>
     </Container>
   );
@@ -73,5 +117,4 @@ export default function Profile() {
   QUICK REMARKS
   - Este componente é um scaffolding: implemente validações e limites no backend. Não confie só no frontend.
   - Mostre QR/secret one-time only. For extra safety, require re-authentication for high-risk actions.
-
 */

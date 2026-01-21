@@ -17,8 +17,14 @@ export const API_KEY_EXPIRES_THRESHOLD = 30 * 24 * 60 * 60 * 1000;
 export const APP_NAME = process.env.NEXT_PUBLIC_APP_NAME || 'NextJS Base';
 export const APP_DESCRIPTION =
   process.env.NEXT_PUBLIC_APP_DESCRIPTION ||
-  'A starter template for Next.js applications with authentication and more.';
-export const APP_LANGUAGE = process.env.NEXT_PUBLIC_APP_LANGUAGE || 'en';
+  'A starter template for building Next.js applications with TypeScript and best practices.';
+export const APP_LANGUAGE = process.env.NEXT_PUBLIC_APP_LANGUAGE || 'pt-BR';
+export const APP_HOMEPAGE_URL =
+  process.env.NEXT_PUBLIC_APP_HOMEPAGE_URL || 'https://app.example.com/';
+export const APP_MANUAL_URL =
+  process.env.NEXT_PUBLIC_APP_MANUAL_URL || 'https://app.example.com/manual';
+export const APP_VIDEO_URL =
+  process.env.NEXT_PUBLIC_APP_VIDEO_URL || 'https://youtu.be/nexus-os-demo';
 
 /**
  * React Query related constants

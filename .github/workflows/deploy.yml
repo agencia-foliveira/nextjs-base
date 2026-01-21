@@ -1,0 +1,69 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches: ["prod"]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Upload project to VPS
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT || 22 }}
+          source: "./"
+          target: "/opt/nexus-os"
+          rm: true
+          strip_components: 0
+          overwrite: true
+          proxy_port: 0
+          timeout: 120s
+
+      - name: Configure and deploy via SSH
+        uses: appleboy/ssh-action@v1.0.0
+        env:
+          PROD_ENV_FILE: ${{ secrets.PROD_ENV_FILE }}
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          # Optional: set port via secret; if unset, action defaults to 22
+          port: ${{ secrets.SSH_PORT }}
+          # Forward envs to remote for expansion in script
+          envs: PROD_ENV_FILE
+          script_stop: true
+          timeout: 180s
+          script: |
+            set -e
+            WORKDIR=/opt/nexus-os
+            mkdir -p "$WORKDIR"
+            cd "$WORKDIR"
+
+            echo "Escrevendo .env a partir do secret PROD_ENV_FILE"
+            # Grava o conteúdo completo do secret no arquivo .env
+            # Usamos printf para preservar quebras de linha sem ecoar no log
+            printf "%s" "$PROD_ENV_FILE" > .env
+
+            # Validação básica sem expor segredos
+            if [ ! -s .env ]; then
+              echo "Falha ao criar .env: arquivo vazio" >&2
+              exit 1
+            fi
+            echo ".env criado com $(wc -l < .env) linhas"
+
+            echo "Parando containers antigos"
+            docker compose down || true
+
+            echo "Subindo novos serviços"
+            docker compose up -d --build
+
+            echo "Status final dos containers"
+            docker compose ps

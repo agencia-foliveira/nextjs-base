@@ -5,22 +5,16 @@ export const theme = createTheme({
   primaryShade: 7,
   defaultRadius: 'md',
   focusRing: 'always',
-  fontFamily: 'Roboto, sans-serif',
-  headings: { fontFamily: 'Roboto, sans-serif' },
-  colors: {
-    brand: [
-      '#f3f0ff',
-      '#e5dbff',
-      '#d0bfff',
-      '#b197fc',
-      '#9775fa',
-      '#845ef7',
-      '#7950f2',
-      '#7048e8',
-      '#6741d9',
-      '#5f3dc4',
-    ],
+  fontFamily: 'Segoe UI, Roboto, system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif',
+  headings: {
+    fontFamily: 'Segoe UI, Roboto, system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif',
+    sizes: {
+      h1: { fontSize: '56px', lineHeight: '1.1', fontWeight: '800' },
+      h2: { fontSize: '40px', lineHeight: '1.15', fontWeight: '700' },
+      h3: { fontSize: '32px', lineHeight: '1.2', fontWeight: '700' },
+    },
   },
+  colors: {},
   fontSizes: {
     xl: '24px',
     lg: '20px',
