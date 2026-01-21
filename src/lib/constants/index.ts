@@ -1,4 +1,4 @@
-/** biome-ignore-all lint/style/noMagicNumbers: All constants are defined using descriptive names */
+/* eslint-disable no-magic-numbers */
 
 /**
  * Security and authentication related constants

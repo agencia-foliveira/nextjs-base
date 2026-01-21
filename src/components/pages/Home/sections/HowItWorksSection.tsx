@@ -1,6 +1,5 @@
 'use client';
 import { AspectRatio, Card, Container, Grid, Stack, Text, Title } from '@mantine/core';
-import { APP_VIDEO_URL } from '@/lib/constants';
 
 const steps = [
   {
@@ -26,12 +25,12 @@ const steps = [
 ];
 
 export function HowItWorksSection() {
-  /* biome-ignore lint/style/noMagicNumbers: Aspect ratio constant for YouTube embeds */
+  // eslint-disable-next-line no-magic-numbers
   const YOUTUBE_ASPECT_RATIO = 16 / 9;
   // Vídeo definitivo: https://youtu.be/P3vLLNasOeI?si=Zq2GMvlgjs50iUX-
-  const toYouTubeEmbed = (_url?: string): string => 'https://www.youtube.com/embed/P3vLLNasOeI';
+  const toYouTubeEmbed = (): string => 'https://www.youtube.com/embed/P3vLLNasOeI';
 
-  const embedSrc = toYouTubeEmbed(APP_VIDEO_URL);
+  const embedSrc = toYouTubeEmbed();
   return (
     <Container id="como-funciona" size="lg" py="xl">
       <Stack gap="sm" align="center">
