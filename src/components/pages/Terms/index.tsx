@@ -142,7 +142,7 @@ export function Terms() {
           <h2 id="contato">12. Contato</h2>
           <p>
             Dúvidas sobre estes Termos? Entre em contato em{' '}
-            <a href="mailto:contato@nextstarter.com.br">contato@nextstarter.com.br</a>.
+            <a href="mailto:agencia.foliveira@gmail.com">agencia.foliveira@gmail.com</a>.
           </p>
         </section>
       </article>

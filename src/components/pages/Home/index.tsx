@@ -16,6 +16,7 @@ import {
   Text,
   ThemeIcon,
   Title,
+  useMantineTheme,
 } from '@mantine/core';
 import {
   BarChart3,
@@ -31,6 +32,7 @@ import {
 } from 'lucide-react';
 
 export function Home() {
+  const theme = useMantineTheme();
   const features = [
     {
       icon: Database,
@@ -234,13 +236,13 @@ export function Home() {
       </Container>
 
       {/* Tech Stack Section */}
-      <Box style={{ backgroundColor: '#f8f9fa' }} py={rem(80)}>
+      <Box style={{ backgroundColor: theme.colors.gray[8] }} py={rem(80)}>
         <Container size="lg">
           <Stack gap="xl" align="center">
             <Title order={2} ta="center" size={rem(36)} c="violet">
               Stack Tecnológico
             </Title>
-            <Text size="lg" c="dimmed" ta="center" maw={rem(600)}>
+            <Text size="lg" c="white" ta="center" maw={rem(600)}>
               Construído com as tecnologias mais modernas e confiáveis do mercado
             </Text>
 

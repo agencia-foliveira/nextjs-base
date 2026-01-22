@@ -168,7 +168,7 @@ export function Pricing() {
           <Group mt="md" justify="center">
             <Button
               component="a"
-              href="mailto:contato@nextstarter.com.br"
+              href="mailto:agencia.foliveira@gmail.com"
               target="_blank"
               rel="noopener noreferrer"
               color="brand"

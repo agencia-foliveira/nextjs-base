@@ -56,7 +56,7 @@ export function PublicFooter() {
       <Container className={classes.afterFooter}>
         <Text c="dimmed" size="sm">
           © {new Date().getFullYear()} Next Starter. Todos os direitos reservados. ·{' '}
-          <Anchor href="mailto:contato@nextstarter.com.br">contato@nextstarter.com.br</Anchor>
+          <Anchor href="mailto:agencia.foliveira@gmail.com">agencia.foliveira@gmail.com</Anchor>
         </Text>
       </Container>
     </div>
