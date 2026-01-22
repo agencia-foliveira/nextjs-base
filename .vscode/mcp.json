@@ -1,13 +1,19 @@
 {
-	"inputs": [],
-	"servers": {
-		"next-devtools": {
-			"command": "npx",
-			"args": [
-				"-y",
-				"next-devtools-mcp@latest"
-			],
-			"type": "stdio"
-		}
-	}
+  "servers": {
+    "next-devtools": {
+      "command": "npx",
+      "args": ["-y", "next-devtools-mcp@0.3.10"],
+      "env": {
+        "NEXT_TELEMETRY_DISABLED": "1",
+        "SystemRoot": "C:\\Windows",
+        "PROGRAMFILES": "C:\\Program Files"
+      },
+      "type": "stdio"
+    },
+    "Prisma-Local": {
+      "command": "npx",
+      "args": ["-y", "prisma", "mcp"]
+    }
+  },
+  "inputs": []
 }

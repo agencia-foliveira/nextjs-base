@@ -2,7 +2,7 @@
 
 ## 1. Purpose
 
-This document provides the required context, architecture, and execution rules for all agents contributing to the **Nexus OS** codebase.
+This document provides the required context, architecture, and execution rules for all agents contributing to the **Next Starter** codebase.
 Agents must follow these guidelines rigorously to ensure consistency, maintainability, and correctness across the project.
 
 Before producing or modifying any code, components, database models, or architecture, agents must always follow the documentation sources and rules listed below.
@@ -31,7 +31,7 @@ These URLs override any outdated assumptions or cached knowledge and must be con
 
 ## 3. Project Overview
 
-**Name:** Nexus OS
+**Name:** Next Starter
 **Version:** 2.0.0
 **Framework:** Next.js 16+ (App Router, Turbopack)
 **Type:** Full-Stack SaaS Platform with authentication, ERP integrations, background jobs, and dashboards.

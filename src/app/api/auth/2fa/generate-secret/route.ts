@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authenticator } from 'otplib';
+
 import { APP_NAME } from '@/lib/constants';
 import { authOptions } from '@/lib/next-auth';
 import prisma from '@/lib/prisma';

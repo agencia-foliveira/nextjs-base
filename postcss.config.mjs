@@ -1,5 +1,5 @@
 const config = {
-	plugins: {
+  plugins: {
     'postcss-preset-mantine': {},
     'postcss-simple-vars': {
       variables: {

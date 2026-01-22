@@ -1,7 +1,8 @@
+import { getServerSession } from 'next-auth';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
 import { z } from 'zod';
+
 import { createInvitation } from '@/features/users/services/invitation.service';
 import { sendEmail } from '@/lib/brevo';
 import { authOptions } from '@/lib/next-auth';
@@ -43,7 +44,7 @@ export async function POST(req: NextRequest) {
   await sendEmail({
     toEmail: email,
     toName: name,
-    subject: 'Convite para acessar o NexusOS',
+    subject: 'Convite para acessar o Next Starter',
     link: inviteLink,
     templateName: 'inviteUser',
   });

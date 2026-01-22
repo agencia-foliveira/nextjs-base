@@ -19,10 +19,13 @@ import { IconSearch, IconTrash, IconUserEdit } from '@tabler/icons-react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
-import { deleteUserAction } from '@/features/users/actions/user.actions';
+
 import { PAGE_SIZE_DEFAULT } from '../../constants';
 import type { User } from '../../types/user';
+
 import InviteUserForm from './InviteUserForm';
+
+import { deleteUserAction } from '@/features/users/actions/user.actions';
 
 export default function UsersList() {
   const modals = useModals();
@@ -71,7 +74,7 @@ export default function UsersList() {
   const onDelete = (id: string, name: string) => {
     modals.openConfirmModal({
       title: 'Excluir usuário',
-      children: <Text>Tem certeza que deseja excluir "{name}"?</Text>,
+      children: <Text>Tem certeza que deseja excluir {`"${name}"`}?</Text>,
       labels: { confirm: 'Excluir', cancel: 'Cancelar' },
       confirmProps: { color: 'red' },
       onConfirm: () => {

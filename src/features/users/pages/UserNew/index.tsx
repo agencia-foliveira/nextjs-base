@@ -2,6 +2,7 @@
 import { Button, Group, Select, Stack, TextInput, Title } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { useState } from 'react';
+
 import { createUserAction } from '@/features/users/actions/user.actions';
 
 export default function UserNew() {

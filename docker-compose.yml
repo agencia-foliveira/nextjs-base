@@ -17,8 +17,8 @@ services:
       - --accesslog=true
       - --log.level=INFO
     ports:
-      - "80:80"
-      - "443:443"
+      - '80:80'
+      - '443:443'
     volumes:
       - letsencrypt:/letsencrypt
       - /var/run/docker.sock:/var/run/docker.sock:ro
@@ -26,17 +26,17 @@ services:
       - web
 
   db:
-    image: postgres:16-alpine
-    container_name: nexus_db
+    image: postgres:18.1
+    container_name: nextstarter_db
     restart: unless-stopped
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-nexus}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change-me}
       POSTGRES_DB: ${POSTGRES_DB:-nexus}
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - pgdata:/var/lib/postgresql
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER}"]
+      test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER}']
       interval: 10s
       timeout: 5s
       retries: 10
@@ -50,8 +50,8 @@ services:
       target: builder
       args:
         DATABASE_URL: ${DATABASE_URL}
-    container_name: nexus_migrate
-    command: sh -c "pnpm exec prisma migrate deploy && pnpm exec prisma db seed"
+    container_name: nextstarter_migrate
+    command: sh -c "pnpm exec prisma migrate deploy"
     environment:
       DATABASE_URL: ${DATABASE_URL}
     depends_on:
@@ -67,18 +67,18 @@ services:
       target: runner
       args:
         DATABASE_URL: ${DATABASE_URL}
-    image: nexus-os:latest
-    container_name: nexus_app
+    image: next-starter:latest
+    container_name: nextstarter_app
     restart: unless-stopped
     env_file:
       - .env
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.nexus.rule=Host(`${DOMAIN}`)"
-      - "traefik.http.routers.nexus.entrypoints=websecure"
-      - "traefik.http.routers.nexus.tls.certresolver=le"
-      - "traefik.docker.network=web"
-      - "traefik.http.services.nexus.loadbalancer.server.port=3000"
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.nexus.rule=Host(`${DOMAIN}`)'
+      - 'traefik.http.routers.nexus.entrypoints=websecure'
+      - 'traefik.http.routers.nexus.tls.certresolver=le'
+      - 'traefik.docker.network=web'
+      - 'traefik.http.services.nexus.loadbalancer.server.port=3000'
     depends_on:
       db:
         condition: service_healthy

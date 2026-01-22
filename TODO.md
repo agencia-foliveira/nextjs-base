@@ -2,7 +2,7 @@
 
 ## Documentação
 
-- [X] Atualizar README.md com informações sobre o Nexus OS e instruções de configuração.
+- [x] Atualizar README.md com informações sobre o Next Starter e instruções de configuração.
 
 ## Estrutural
 

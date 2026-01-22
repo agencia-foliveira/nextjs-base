@@ -150,8 +150,8 @@ export default function PrivacyPolicy() {
 
       <Text mt="sm">
         Basta enviar sua solicitação para o e-mail{' '}
-        <Anchor href="mailto:contato@nexusos.com.br" fw={500}>
-          contato@nexusos.com.br
+        <Anchor href="mailto:contato@nextstarter.com.br" fw={500}>
+          contato@nextstarter.com.br
         </Anchor>
         .
       </Text>

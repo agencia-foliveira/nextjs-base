@@ -18,11 +18,13 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 import { useEffect, useState } from 'react';
-import { GoogleButton } from '@/components/commons/GoogleButton';
-import { useQueryString } from '@/hooks';
+
 import { TwoFactorQRCode } from '../../components/TwoFactorQRCode';
 import { useAuth } from '../../context/AuthContext';
 import { SignInSchema } from '../../services';
+
+import { useQueryString } from '@/hooks';
+import { GoogleButton } from '@/components/commons/GoogleButton';
 
 export function SignIn() {
   const [loading, setLoading] = useState(false);

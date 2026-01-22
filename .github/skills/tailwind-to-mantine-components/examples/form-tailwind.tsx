@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
 export function ContactForm() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,9 +35,7 @@ export function ContactForm() {
         />
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700">
-          Mensagem
-        </label>
+        <label className="block text-sm font-medium text-gray-700">Mensagem</label>
         <textarea
           value={message}
           onChange={(e) => setMessage(e.target.value)}

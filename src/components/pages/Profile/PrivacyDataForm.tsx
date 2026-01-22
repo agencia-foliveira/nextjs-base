@@ -13,6 +13,7 @@ import {
 import { notifications } from '@mantine/notifications';
 import { IconDownload } from '@tabler/icons-react';
 import { useState } from 'react';
+
 import { AccountRemoveModal } from './AccountRemoveModal';
 
 export default function PrivacyDataForm() {

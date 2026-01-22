@@ -1,5 +1,6 @@
 'use server';
 import crypto from 'crypto';
+
 import { sendEmail } from '@/lib/brevo';
 import prisma from '@/lib/prisma';
 
@@ -65,7 +66,7 @@ export async function sendWelcomeActivationEmail({
   name,
   activationLink,
 }: SendWelcomeParams): Promise<void> {
-  const subject = 'Bem-vindo ao Nexus OS — Ative sua conta';
+  const subject = 'Bem-vindo ao Next Starter — Ative sua conta';
   await sendEmail({
     toEmail: email,
     toName: name || 'Cliente',

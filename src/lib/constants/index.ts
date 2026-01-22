@@ -24,7 +24,7 @@ export const APP_HOMEPAGE_URL =
 export const APP_MANUAL_URL =
   process.env.NEXT_PUBLIC_APP_MANUAL_URL || 'https://app.example.com/manual';
 export const APP_VIDEO_URL =
-  process.env.NEXT_PUBLIC_APP_VIDEO_URL || 'https://youtu.be/nexus-os-demo';
+  process.env.NEXT_PUBLIC_APP_VIDEO_URL || 'https://youtu.be/next-starter-demo';
 
 /**
  * React Query related constants

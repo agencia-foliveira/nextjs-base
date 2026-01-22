@@ -1,7 +1,9 @@
 import { notifications } from '@mantine/notifications';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import axiosInstance from '@/lib/api';
+
 import type { ForgotPasswordRequest, ResetPasswordRequest, SignUpRequest } from './auth.schemas';
+
+import axiosInstance from '@/lib/api';
 
 export function useSignUp() {
   return useMutation({

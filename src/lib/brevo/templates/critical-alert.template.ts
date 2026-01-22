@@ -12,7 +12,7 @@ export default function criticalAlertTemplate(name: string, detailsLink?: string
     title: 'Alerta CRÍTICO',
     accentColor: '#fa5252',
     contentHtml,
-    buttonLabel: 'Ver detalhes no NexusOS',
+    buttonLabel: 'Ver detalhes no Next Starter',
     buttonHref: detailsLink,
   });
 }

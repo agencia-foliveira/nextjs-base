@@ -15,6 +15,7 @@ import {
 import type { PlanTier } from '@prisma/client';
 import Link from 'next/link';
 import { useState } from 'react';
+
 import {
   FEATURE_DEFINITIONS,
   FEATURE_LIST_ORDER,
@@ -167,7 +168,7 @@ export function Pricing() {
           <Group mt="md" justify="center">
             <Button
               component="a"
-              href="mailto:contato@nexusos.com.br"
+              href="mailto:contato@nextstarter.com.br"
               target="_blank"
               rel="noopener noreferrer"
               color="brand"

@@ -1,10 +1,13 @@
 import { Burger, Button, Divider, Drawer, Group, ScrollArea } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import Link from 'next/link';
+
+import { Logo } from '../../../commons/Logo';
+
+import classes from './PublicHeader.module.css';
+
 import { UserDropdown } from '@/components/commons/UserDropdown';
 import type { User } from '@/features/auth/services';
-import { Logo } from '../../../commons/Logo';
-import classes from './PublicHeader.module.css';
 
 interface PublicHeaderProps {
   user: User | null;

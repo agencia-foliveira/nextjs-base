@@ -11,7 +11,15 @@ const nextCore = compat.extends('next/core-web-vitals').map((c) => ({
 
 module.exports = [
   {
-    ignores: ['node_modules/**', '.next/**', 'dist/**', 'coverage/**', '.github/**', 'eslint.config.*', 'prettier.config.*']
+    ignores: [
+      'node_modules/**',
+      '.next/**',
+      'dist/**',
+      'coverage/**',
+      '.github/**',
+      'eslint.config.*',
+      'prettier.config.*',
+    ],
   },
   js.configs.recommended,
   ...tseslint.configs.recommended,

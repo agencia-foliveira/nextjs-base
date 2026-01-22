@@ -1,6 +1,7 @@
 'use client';
 import { AppShell } from '@mantine/core';
 import { useHeadroom } from '@mantine/hooks';
+
 import { PublicFooter } from '@/components/layout/PublicLayout/PublicFooter';
 import { PublicHeader } from '@/components/layout/PublicLayout/PublicHeader';
 import { useAuth } from '@/features/auth/context/AuthContext';

@@ -1,4 +1,4 @@
-import { Card, Title, Text, Button, Group } from "@mantine/core";
+import { Card, Title, Text, Button, Group } from '@mantine/core';
 
 interface PricingCardProps {
   title: string;
@@ -7,12 +7,7 @@ interface PricingCardProps {
   onSubscribe: () => void;
 }
 
-export function PricingCard({
-  title,
-  description,
-  price,
-  onSubscribe,
-}: PricingCardProps) {
+export function PricingCard({ title, description, price, onSubscribe }: PricingCardProps) {
   return (
     <Card shadow="sm" radius="lg" withBorder p="lg" maw={384}>
       <Title order={3} mb="xs">

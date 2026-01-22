@@ -1,5 +1,6 @@
 import type { DefaultSession } from 'next-auth';
 import type { JWT as DefaultJWT } from 'next-auth/jwt';
+
 import type { User as AppUser } from '@/features/auth/services';
 
 declare module 'next-auth' {
@@ -8,6 +9,7 @@ declare module 'next-auth' {
     required2FA?: boolean;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
   interface User extends AppUser {}
 }
 

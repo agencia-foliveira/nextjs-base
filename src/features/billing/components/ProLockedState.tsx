@@ -1,5 +1,6 @@
 'use client';
 import { Button, Paper, Stack, Text, Title } from '@mantine/core';
+
 import { useStripeCheckout } from '../services';
 
 interface ProLockedStateProps {

@@ -5,7 +5,7 @@ export function Terms() {
     <Container size="md" px="md">
       <article>
         <header>
-          <h1>Termos de Uso — Nexus OS</h1>
+          <h1>Termos de Uso — Next Starter</h1>
           <p>
             <strong>Última atualização:</strong> Janeiro 2026
           </p>
@@ -14,24 +14,23 @@ export function Terms() {
         <section aria-labelledby="aceitacao">
           <h2 id="aceitacao">1. Aceitação dos Termos</h2>
           <p>
-            Ao utilizar o <strong>Nexus OS</strong>, você concorda com estes Termos de Uso. Caso não
-            concorde com qualquer condição aqui descrita, não utilize o serviço.
+            Ao utilizar o <strong>Next Starter</strong>, você concorda com estes Termos de Uso. Caso
+            não concorde com qualquer condição aqui descrita, não utilize o serviço.
           </p>
         </section>
 
         <section aria-labelledby="descricao">
           <h2 id="descricao">2. Descrição do Serviço</h2>
           <p>
-            O <strong>Nexus OS</strong> é um <em>CFO Digital inteligente</em> que analisa dados de
-            estoque e vendas do Bling ERP para gerar <strong>alertas</strong> e{' '}
+            O <strong>Next Starter</strong> é um <em>CFO Digital inteligente</em> que analisa dados
+            de estoque e vendas do Bling ERP para gerar <strong>alertas</strong> e{' '}
             <strong>recomendações acionáveis</strong> sobre reposição, capital parado e
             oportunidades de crescimento.
           </p>
           <p>
-            O Nexus OS <strong>não realiza operações de escrita</strong> no Bling: não cria pedidos,
-            não altera preços e não modifica estoque. A integração é{' '}
-            <strong>somente leitura</strong> e utiliza <strong>OAuth 2.0</strong>
-            para autorização segura.
+            O Next Starter <strong>não realiza operações de escrita</strong> no Bling: não cria
+            pedidos, notas ou movimentações. Ele opera em <strong>somente leitura</strong> e utiliza
+            <strong> OAuth 2.0</strong> para autorização segura.
           </p>
         </section>
 
@@ -51,7 +50,7 @@ export function Terms() {
           </ul>
           <p>
             A autorização pode ser revogada a qualquer momento nas configurações do Bling ou do
-            próprio Nexus OS.
+            próprio Next Starter.
           </p>
         </section>
 
@@ -103,7 +102,7 @@ export function Terms() {
         <section aria-labelledby="propriedade">
           <h2 id="propriedade">8. Propriedade Intelectual</h2>
           <p>
-            O Nexus OS, suas marcas, código, conteúdos e materiais associados são protegidos por
+            O Next Starter, suas marcas, código, conteúdos e materiais associados são protegidos por
             leis de propriedade intelectual. É vedado copiar, modificar, distribuir ou criar obras
             derivadas sem autorização.
           </p>
@@ -112,12 +111,12 @@ export function Terms() {
         <section aria-labelledby="limites">
           <h2 id="limites">9. Limitação de Responsabilidade</h2>
           <p>
-            O Nexus OS fornece <strong>análises e recomendações</strong> baseadas em dados, sem
+            O Next Starter fornece <strong>análises e recomendações</strong> baseadas em dados, sem
             garantia de resultados financeiros específicos. Decisões de negócio são de
             responsabilidade do usuário.
           </p>
           <p>
-            Na medida permitida pela legislação, o Nexus OS não se responsabiliza por perdas
+            Na medida permitida pela legislação, o Next Starter não se responsabiliza por perdas
             indiretas, lucros cessantes, danos consequenciais ou eventos fora do seu controle
             razoável.
           </p>
@@ -143,7 +142,7 @@ export function Terms() {
           <h2 id="contato">12. Contato</h2>
           <p>
             Dúvidas sobre estes Termos? Entre em contato em{' '}
-            <a href="mailto:contato@nexusos.com.br">contato@nexusos.com.br</a>.
+            <a href="mailto:contato@nextstarter.com.br">contato@nextstarter.com.br</a>.
           </p>
         </section>
       </article>

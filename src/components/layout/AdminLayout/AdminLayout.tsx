@@ -1,9 +1,11 @@
 'use client';
 import { AppShell, Container } from '@mantine/core';
-import { useAuth } from '@/features/auth/context/AuthContext';
-import { UpgradeBanner } from '@/features/billing/components/UpgradeBanner';
+
 import { AdminHeader } from './AdminHeader';
 import { AdminLayoutSkeleton } from './AdminLayout.skeleton';
+
+import { useAuth } from '@/features/auth/context/AuthContext';
+import { UpgradeBanner } from '@/features/billing/components/UpgradeBanner';
 
 export function AdminLayout({ children }: { children: React.ReactNode }) {
   const { status } = useAuth();

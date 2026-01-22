@@ -5,6 +5,7 @@ import type { AuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
 import { authenticator } from 'otplib';
+
 import {
   LOCK_OUT_DURATION_MINUTES,
   LOCK_OUT_THRESHOLD,

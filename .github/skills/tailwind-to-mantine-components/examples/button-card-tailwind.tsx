@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 interface PricingCardProps {
   title: string;
@@ -7,12 +7,7 @@ interface PricingCardProps {
   onSubscribe: () => void;
 }
 
-export function PricingCard({
-  title,
-  description,
-  price,
-  onSubscribe,
-}: PricingCardProps) {
+export function PricingCard({ title, description, price, onSubscribe }: PricingCardProps) {
   return (
     <div className="max-w-sm rounded-xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-md transition-shadow">
       <h2 className="mb-2 text-xl font-semibold text-gray-900">{title}</h2>

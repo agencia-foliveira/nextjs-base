@@ -76,7 +76,7 @@ export function wrapEmail({
     </head>
     <body>
       <div class="container">
-        <div class="brand">Nexus OS</div>
+        <div class="brand">Next Starter</div>
         <h1>${title}</h1>
         <div class="content">
           ${contentHtml}

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+
 import { Home } from '@/components/pages/Home';
 import { APP_DESCRIPTION, APP_NAME } from '@/lib/constants';
 

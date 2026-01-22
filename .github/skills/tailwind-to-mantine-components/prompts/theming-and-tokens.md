@@ -8,32 +8,32 @@ description: Configuração de tema e tokens de design Mantine
 Todo projeto Mantine deve ter um `MantineProvider` na raiz:
 
 ```tsx
-import { MantineProvider, createTheme } from "@mantine/core";
-import "@mantine/core/styles.css";
+import { MantineProvider, createTheme } from '@mantine/core';
+import '@mantine/core/styles.css';
 
 const theme = createTheme({
-  primaryColor: "blue",
-  fontFamily: "Inter, sans-serif",
+  primaryColor: 'blue',
+  fontFamily: 'Inter, sans-serif',
   radius: {
-    xs: "0.125rem",
-    sm: "0.25rem",
-    md: "0.5rem",
-    lg: "1rem",
-    xl: "2rem",
+    xs: '0.125rem',
+    sm: '0.25rem',
+    md: '0.5rem',
+    lg: '1rem',
+    xl: '2rem',
   },
   colors: {
     // Cores customizadas (array de 10 shades)
     brand: [
-      "#f0f9ff",
-      "#e0f2fe",
-      "#bae6fd",
-      "#7dd3fc",
-      "#38bdf8",
-      "#0ea5e9",
-      "#0284c7",
-      "#0369a1",
-      "#075985",
-      "#0c4a6e",
+      '#f0f9ff',
+      '#e0f2fe',
+      '#bae6fd',
+      '#7dd3fc',
+      '#38bdf8',
+      '#0ea5e9',
+      '#0284c7',
+      '#0369a1',
+      '#075985',
+      '#0c4a6e',
     ],
   },
 });

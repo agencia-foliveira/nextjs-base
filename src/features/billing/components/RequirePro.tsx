@@ -1,6 +1,7 @@
 'use client';
 import { useSession } from 'next-auth/react';
 import type { ReactNode } from 'react';
+
 import { ProLockedState } from './ProLockedState';
 
 interface RequireProProps {

@@ -2,7 +2,7 @@
   height: 100vh;
   background-size: cover;
   background-repeat: no-repeat;
-  background-image: url("/img/auth-bg.png");
+  background-image: url('/img/auth-bg.png');
   display: flex;
   justify-content: end;
 }

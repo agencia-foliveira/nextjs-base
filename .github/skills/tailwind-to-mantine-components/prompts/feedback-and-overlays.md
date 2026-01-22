@@ -17,15 +17,10 @@ description: Conversão de componentes de feedback e overlays Tailwind para Mant
 **Mantine:**
 
 ```tsx
-import { Alert } from "@mantine/core";
-import { IconAlertCircle } from "@tabler/icons-react";
+import { Alert } from '@mantine/core';
+import { IconAlertCircle } from '@tabler/icons-react';
 
-<Alert
-  variant="light"
-  color="red"
-  title="Erro ao salvar!"
-  icon={<IconAlertCircle />}
->
+<Alert variant="light" color="red" title="Erro ao salvar!" icon={<IconAlertCircle />}>
   Verifique os campos obrigatórios.
 </Alert>;
 ```
@@ -43,7 +38,7 @@ import { IconAlertCircle } from "@tabler/icons-react";
 **Mantine:**
 
 ```tsx
-import { Badge } from "@mantine/core";
+import { Badge } from '@mantine/core';
 
 <Badge color="green" variant="light">
   Ativo
@@ -71,8 +66,8 @@ import { Badge } from "@mantine/core";
 **Mantine:**
 
 ```tsx
-import { Modal, Button } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
+import { Modal, Button } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
 
 function Demo() {
   const [opened, { open, close }] = useDisclosure(false);
@@ -93,8 +88,8 @@ function Demo() {
 **Mantine:**
 
 ```tsx
-import { Drawer, Button } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
+import { Drawer, Button } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
 
 function Demo() {
   const [opened, { open, close }] = useDisclosure(false);
@@ -124,7 +119,7 @@ function Demo() {
 **Mantine:**
 
 ```tsx
-import { Tooltip, Button } from "@mantine/core";
+import { Tooltip, Button } from '@mantine/core';
 
 <Tooltip label="Tooltip">
   <Button>Hover me</Button>

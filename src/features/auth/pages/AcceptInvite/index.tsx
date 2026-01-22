@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 import { z } from 'zod';
+
 import { useAcceptInvitation, useVerifyInvitation } from '@/features/users/services';
 import { useQueryString } from '@/hooks';
 

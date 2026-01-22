@@ -4,9 +4,11 @@ import { ModalsProvider } from '@mantine/modals';
 import { Notifications } from '@mantine/notifications';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { SessionProvider } from 'next-auth/react';
+
+import { theme } from './theme';
+
 import { AuthProvider } from '@/features/auth/context/AuthContext';
 import { QUERY_STALE_TIME } from '@/lib/constants';
-import { theme } from './theme';
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const queryClient = new QueryClient({

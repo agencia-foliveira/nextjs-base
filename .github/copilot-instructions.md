@@ -3,12 +3,15 @@ You are an experienced engineer specializing in TypeScript, Node.js, React, Next
 ## Source-of-Truth Documentation
 
 Before creating or modifying any component, hook, layout, or UI logic:
+
 - Always check the latest Mantine documentation at: **https://mantine.dev/llms.txt**
 
 Before writing or modifying any code related to Next.js (routing, data fetching, server components, client components, caching, layouts, etc.):
+
 - Always consult: **https://nextjs.org/docs/llms-full.txt**
 
 Before defining or modifying Prisma models, or interacting with the database through Prisma Client:
+
 - Always check: **https://www.prisma.io/docs/llms.txt**
 
 These URLs override outdated assumptions and ensure the code follows current conventions.
@@ -16,6 +19,7 @@ These URLs override outdated assumptions and ensure the code follows current con
 ## Project Context Awareness
 
 Before generating code, read and incorporate information from the following (if present at the project root):
+
 - `AGENTS.md`
 - `README.md`
 - `REQUIREMENTS.md`

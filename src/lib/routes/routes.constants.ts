@@ -1,4 +1,5 @@
 import type { Route } from 'next';
+
 import type { RouteObject } from './routes.types';
 
 // TODO: Encontrar uma forma de forçar que essas constantes sejam a únicas fontes de rota na aplicação.

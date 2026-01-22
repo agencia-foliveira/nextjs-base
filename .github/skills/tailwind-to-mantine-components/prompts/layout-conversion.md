@@ -19,7 +19,7 @@ description: Conversão de layouts Tailwind (flex/grid) para componentes Mantine
 **Mantine:**
 
 ```tsx
-import { Group } from "@mantine/core";
+import { Group } from '@mantine/core';
 
 <Group gap="md" align="center">
   <span>Item 1</span>
@@ -41,7 +41,7 @@ import { Group } from "@mantine/core";
 **Mantine:**
 
 ```tsx
-import { Stack } from "@mantine/core";
+import { Stack } from '@mantine/core';
 
 <Stack gap="md">
   <p>Linha 1</p>
@@ -54,15 +54,13 @@ import { Stack } from "@mantine/core";
 **Tailwind:**
 
 ```tsx
-<div className="flex flex-wrap justify-between items-start gap-6">
-  {/* children */}
-</div>
+<div className="flex flex-wrap justify-between items-start gap-6">{/* children */}</div>
 ```
 
 **Mantine:**
 
 ```tsx
-import { Flex } from "@mantine/core";
+import { Flex } from '@mantine/core';
 
 <Flex wrap="wrap" justify="space-between" align="flex-start" gap="xl">
   {/* children */}
@@ -76,15 +74,13 @@ import { Flex } from "@mantine/core";
 **Tailwind:**
 
 ```tsx
-<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-  {/* cards */}
-</div>
+<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">{/* cards */}</div>
 ```
 
 **Mantine:**
 
 ```tsx
-import { SimpleGrid } from "@mantine/core";
+import { SimpleGrid } from '@mantine/core';
 
 <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing="md">
   {/* cards */}
@@ -105,7 +101,7 @@ import { SimpleGrid } from "@mantine/core";
 **Mantine:**
 
 ```tsx
-import { Grid } from "@mantine/core";
+import { Grid } from '@mantine/core';
 
 <Grid gutter="md">
   <Grid.Col span={8}>Main</Grid.Col>

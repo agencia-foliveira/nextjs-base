@@ -14,6 +14,7 @@ import {
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useEffect, useState } from 'react';
+
 import { useAuth } from '@/features/auth/context/AuthContext';
 
 type LoginActivity = {

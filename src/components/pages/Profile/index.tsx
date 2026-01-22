@@ -4,6 +4,7 @@ import { ArrowLeft } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { lazy } from 'react';
+
 import { openCheckout, openPortal } from '@/features/billing/services/stripeClient';
 
 const ProfileForm = lazy(() => import('./ProfileForm'));

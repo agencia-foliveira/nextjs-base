@@ -1,6 +1,7 @@
 import type { UserRole } from '@prisma/client';
 import { authenticator } from 'otplib';
 import QRCode from 'qrcode';
+
 import { PERMISSIONS } from './auth.constants';
 import type { PermissionPath } from './auth.types';
 

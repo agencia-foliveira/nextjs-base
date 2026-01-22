@@ -1,5 +1,6 @@
 import { useDebouncedValue } from '@mantine/hooks';
 import { useEffect, useMemo, useRef, useState } from 'react';
+
 import { useQueryString } from './useQueryString';
 
 const SEARCH_DEBOUNCE_INTERVAL = 300;
@@ -13,7 +14,7 @@ type UseFiltersOptions<T extends object> = {
   onFiltersChange: React.Dispatch<React.SetStateAction<T>>;
 };
 
-export function useFilters<T extends Record<string, any>>({
+export function useFilters<T extends Record<string, string>>({
   initialFilters,
   debounceKey = 'search',
   hasFilterKeys = ['search'] as (keyof T)[],
@@ -33,7 +34,7 @@ export function useFilters<T extends Record<string, any>>({
     });
   }, [filters, hasFilterKeys]);
 
-  const setFilter = (key: keyof T, value: any) => {
+  const setFilter = (key: keyof T, value: string | null | undefined) => {
     setFilters((prev) => ({ ...prev, [key]: value ?? '' }));
     if (debounceKey === key) {
       onFilter({ ...filters, [key]: value ?? '' });

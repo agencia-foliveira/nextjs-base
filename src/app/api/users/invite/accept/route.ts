@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
+
 import { getInvitationByToken } from '@/features/users/services/invitation.service';
 import prisma from '@/lib/prisma';
 

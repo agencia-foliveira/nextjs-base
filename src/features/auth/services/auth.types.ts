@@ -1,5 +1,6 @@
 import type { PlanTier, UserRole } from '@prisma/client';
 import type { DefaultUser } from 'next-auth';
+
 import type { PERMISSIONS } from './auth.constants';
 
 export interface User extends DefaultUser {

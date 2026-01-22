@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
+
 import { listUsers } from '@/features/users/services/user.service';
 import { authOptions } from '@/lib/next-auth';
 

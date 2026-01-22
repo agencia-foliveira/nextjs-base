@@ -1,4 +1,4 @@
-# Nexus OS - Sistema Inteligente de Otimização de Inventário
+# Next Starter - Sistema Inteligente de Otimização de Inventário
 
 ![Next.js](https://img.shields.io/badge/Next.js-16-black)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.6-blue)
@@ -6,17 +6,17 @@
 
 ## 📋 Visão Geral do Produto
 
-**Nexus OS** é uma plataforma SaaS de otimização de inventário que conecta-se ao Bling ERP para analisar desempenho de estoque, identificar riscos e oportunidades e fornecer recomendações acionáveis com impacto financeiro mensurável. A solução transforma dados operacionais brutos em ações priorizadas, contextuais e alinhadas aos objetivos da operação.
+**Next Starter** é uma plataforma SaaS de otimização de inventário que conecta-se ao Bling ERP para analisar desempenho de estoque, identificar riscos e oportunidades e fornecer recomendações acionáveis com impacto financeiro mensurável. A solução transforma dados operacionais brutos em ações priorizadas, contextuais e alinhadas aos objetivos da operação.
 
 ### 🎯 Objetivos Principais
 
-| Objetivo | Meta | Status |
-|----------|------|--------|
-| Reduzir rupturas de estoque | Diminuir eventos de falta em 35% | 🎯 |
-| Reduzir dead stock | Diminuir capital parado em 25% | 🎯 |
-| Otimizar preços | Aumentar margem em 15% | 🎯 |
-| Insights priorizados | Tempo de execução < 10 minutos | ✅ |
-| Automação de decisões | 20% das ações automatizadas | 🔄 |
+| Objetivo                    | Meta                             | Status |
+| --------------------------- | -------------------------------- | ------ |
+| Reduzir rupturas de estoque | Diminuir eventos de falta em 35% | 🎯     |
+| Reduzir dead stock          | Diminuir capital parado em 25%   | 🎯     |
+| Otimizar preços             | Aumentar margem em 15%           | 🎯     |
+| Insights priorizados        | Tempo de execução < 10 minutos   | ✅     |
+| Automação de decisões       | 20% das ações automatizadas      | 🔄     |
 
 ## 🚀 Começando
 
@@ -31,8 +31,8 @@
 
 ```bash
 # Clone o repositório
-git clone https://github.com/seu-org/nexus-os.git
-cd nexus-os
+git clone https://github.com/seu-org/next-starter.git
+cd next-starter
 
 # Instale dependências
 pnpm install
@@ -50,9 +50,9 @@ pnpm dev
 
 ### Recursos públicos
 
-- Homepage: https://nexusos.app/
-- Manual do usuário: https://docs.nexusos.app/manual
-- Vídeo demonstrativo: https://youtu.be/nexus-os-demo
+- Homepage: https://nextstarter.app/
+- Manual do usuário: https://docs.nextstarter.app/manual
+- Vídeo demonstrativo: https://youtu.be/next-starter-demo
 ```
 
 ## 🏗️ Arquitetura
@@ -71,7 +71,7 @@ pnpm dev
 ### Estrutura do Projeto
 
 ```
-nexus-os/
+next-starter/
 ├── src/
 │   ├── app/                    # Next.js App Router
 │   │   ├── (auth)/             # Rotas de autenticação
@@ -109,6 +109,7 @@ nexus-os/
 ### 🚨 Sistema de Alertas
 
 #### Tipos de Alertas
+
 1. **Ruptura de Estoque** - Risco de falta do produto em estoque
    - Calcula VVD (Vendas por Dia)
    - Dias restantes de estoque
@@ -128,6 +129,7 @@ nexus-os/
 ### 🔧 Motor de Recomendações
 
 #### Cálculos Implementados
+
 - **VVD Real**: Vendas por dia considerando apenas dias com estoque
 - **VVD Simples**: Média sobre janela completa
 - **Dias Restantes**: Stock / VVD
@@ -139,6 +141,7 @@ nexus-os/
 ### 📈 Dashboard
 
 #### Principais Métricas
+
 - **Overview Financeiro**: Capital total imobilizado, perda esperada
 - **Rupturas Críticas**: Produtos com menos de 5 dias de estoque
 - **Dead Stock**: Produtos sem venda há mais de 90 dias
@@ -160,6 +163,7 @@ nexus-os/
 ```
 
 ### Webhooks Suportados
+
 - Novas vendas
 - Atualizações de estoque
 - Mudanças de preço
@@ -198,12 +202,12 @@ BLING_CLIENT_ID=""
 BLING_CLIENT_SECRET=""
 BLING_REDIRECT_URI=""
 
-# Recursos públicos Nexus OS
-NEXT_PUBLIC_APP_NAME="Nexus OS"
+# Recursos públicos Next Starter
+NEXT_PUBLIC_APP_NAME="Next Starter"
 NEXT_PUBLIC_APP_DESCRIPTION="Plataforma inteligente que conecta dados do Bling ERP para otimizar estoque, reduzir rupturas e destravar capital."
-NEXT_PUBLIC_APP_HOMEPAGE_URL="https://nexusos.app/"
-NEXT_PUBLIC_APP_MANUAL_URL="https://docs.nexusos.app/manual"
-NEXT_PUBLIC_APP_VIDEO_URL="https://youtu.be/nexus-os-demo"
+NEXT_PUBLIC_APP_HOMEPAGE_URL="https://nextstarter.app/"
+NEXT_PUBLIC_APP_MANUAL_URL="https://docs.nextstarter.app/manual"
+NEXT_PUBLIC_APP_VIDEO_URL="https://youtu.be/next-starter-demo"
 
 # Inngest
 INNGEST_EVENT_KEY=""
@@ -217,27 +221,31 @@ INNGEST_SIGNING_KEY=""
 Este projeto fornece um `docker-compose.yml` pronto para produção com Traefik (HTTPS automático via Let's Encrypt), Postgres e o app Next.js (modo standalone).
 
 #### Pré-requisitos na VPS
+
 - Docker + Docker Compose Plugin instalados
 - DNS do seu `DOMAIN` apontando para o IP da VPS
 - Porta 80 e 443 liberadas no firewall
 
 #### Passos
+
 1. Configure as variáveis no arquivo `.env` conforme modelo em [.env.example](.env.example). Para produção, use:
    - `DOMAIN`, `LETSENCRYPT_EMAIL`
    - `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB`
-   - `DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@nexus_db:5432/${POSTGRES_DB}?schema=public`
+   - `DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@nextstarter_db:5432/${POSTGRES_DB}?schema=public`
    - `NEXTAUTH_SECRET` (forte) e `NEXTAUTH_URL=https://${DOMAIN}`
 
 2. Suba os serviços com Docker Compose:
+
 ```bash
 docker compose up -d --build
 ```
 
 3. Verifique logs (útil para primeira subida):
+
 ```bash
 docker logs -f traefik
-docker logs -f nexus_migrate
-docker logs -f nexus_app
+docker logs -f nextstarter_migrate
+docker logs -f nextstarter_app
 ```
 
 O serviço `migrate` garante que migrações e seed sejam aplicados antes do app iniciar.
@@ -245,11 +253,13 @@ O serviço `migrate` garante que migrações e seed sejam aplicados antes do app
 ### CI/CD: Deploy automático via GitHub Actions
 
 Há uma workflow pronta em [.github/workflows/deploy.yml](.github/workflows/deploy.yml) que:
+
 - Faz upload do projeto para a VPS via SSH
 - Gera o arquivo `.env` remoto a partir de Secrets do GitHub
 - Executa `docker compose up -d --build`
 
 #### Secrets exigidos no repositório
+
 - `SSH_HOST`, `SSH_USER`, `SSH_KEY` (chave privada), `SSH_PORT` (opcional)
 - `DOMAIN`, `LETSENCRYPT_EMAIL`
 - `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB`
@@ -257,20 +267,24 @@ Há uma workflow pronta em [.github/workflows/deploy.yml](.github/workflows/depl
 - Integrações opcionais: `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `BLING_CLIENT_ID`, `BLING_CLIENT_SECRET`, `INNGEST_SIGNING_KEY`, `INNGEST_EVENT_KEY`, `BREVO_API_KEY`, `BREVO_SENDER_NAME`, `BREVO_SENDER_EMAIL`
 
 ##### Email (Brevo)
+
 - SDK: `@getbrevo/brevo` (já instalado)
 - Variáveis: `BREVO_API_KEY`, `BREVO_SENDER_NAME`, `BREVO_SENDER_EMAIL`
 - Implementação: ver `src/lib/brevo/index.ts` usando `TransactionalEmailsApi.sendTransacEmail()`
 
 #### Disparo
+
 - `push` na branch `main` ou manual via "Run workflow".
 
 #### Observações
+
 - A primeira emissão de certificado pode levar alguns minutos.
 - Para atualizar a aplicação, basta novo commit na `main` (ou rodar manualmente a workflow).
 
 ## 📈 Métricas de Sucesso
 
 ### KPIs Monitorados
+
 1. **Taxa de Ruptura**: < 5% de falsos positivos
 2. **Tempo de Resposta**: API < 150ms
 3. **Cobertura de Código**: > 80%
@@ -278,6 +292,7 @@ Há uma workflow pronta em [.github/workflows/deploy.yml](.github/workflows/depl
 5. **Satisfação do Usuário**: NPS > 50
 
 ### Logs e Monitoramento
+
 - Logs estruturados com Pino
 - Métricas de performance
 - Alertas de erro em tempo real
@@ -292,6 +307,7 @@ Há uma workflow pronta em [.github/workflows/deploy.yml](.github/workflows/depl
 5. Abra um Pull Request
 
 ### Convenções de Código
+
 - TypeScript estrito
 - ESLint configurado
 - Prettier para formatação
@@ -303,20 +319,20 @@ Este projeto está licenciado sob a licença MIT - veja o arquivo [LICENSE](LICE
 
 ## 📞 Suporte
 
-- **Manual do usuário**: [docs.nexusos.app/manual](https://docs.nexusos.app/manual)
-- **Vídeo demonstrativo**: [youtube.com/watch?v=nexus-os-demo](https://youtu.be/nexus-os-demo)
-- **Documentação técnica**: [docs.nexusos.com](https://docs.nexusos.com)
-- **Suporte Técnico**: support@nexusos.com
-- **Comunidade**: [Discord](https://discord.gg/nexusos)
-- **Status**: [status.nexusos.com](https://status.nexusos.com)
+- **Manual do usuário**: [docs.nextstarter.app/manual](https://docs.nextstarter.app/manual)
+- **Vídeo demonstrativo**: [youtube.com/watch?v=next-starter-demo](https://youtu.be/next-starter-demo)
+- **Documentação técnica**: [docs.nextstarter.com](https://docs.nextstarter.com)
+- **Suporte Técnico**: support@nextstarter.com
+- **Comunidade**: [Discord](https://discord.gg/nextstarter)
+- **Status**: [status.nextstarter.com](https://status.nextstarter.com)
 
 ## 🙏 Agradecimentos
 
-- Equipe de desenvolvimento Nexus OS
+- Equipe de desenvolvimento Next Starter
 - Comunidade open source
 - Usuários beta testers
 - Parceiros de integração
 
 ---
 
-**Nexus OS** - Transformando dados de estoque em lucro.
+**Next Starter** - Transformando dados de estoque em lucro.

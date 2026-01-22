@@ -1,4 +1,5 @@
 import { type NextRequest, NextResponse } from 'next/server';
+
 import { getInvitationByToken } from '@/features/users/services/invitation.service';
 
 export async function GET(req: NextRequest) {

@@ -1,4 +1,5 @@
 import { randomBytes } from 'node:crypto';
+
 import prisma from '@/lib/prisma';
 
 const INVITE_TOKEN_BYTES = 32;

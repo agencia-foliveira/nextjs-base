@@ -1,4 +1,5 @@
 import { getServerSession } from 'next-auth';
+
 import { AdminLayout } from '@/components/layout/AdminLayout';
 import { PublicLayout } from '@/components/layout/PublicLayout';
 import { NotFoundPage } from '@/components/pages/NotFound';

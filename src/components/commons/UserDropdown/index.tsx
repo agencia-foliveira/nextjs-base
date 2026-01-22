@@ -9,6 +9,7 @@ import {
 } from '@tabler/icons-react';
 import Link from 'next/link';
 import { signOut } from 'next-auth/react';
+
 import { useAuth } from '@/features/auth/context/AuthContext';
 import { openCheckout, openPortal } from '@/features/billing/services/stripeClient';
 

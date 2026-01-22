@@ -14,8 +14,10 @@ import {
 import { useForm } from '@mantine/form';
 import { IconTrash, IconUpload } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
-import { useAuth } from '@/features/auth/context/AuthContext';
+
 import { AccountRemoveModal } from './AccountRemoveModal';
+
+import { useAuth } from '@/features/auth/context/AuthContext';
 
 interface ProfileFormValues {
   name: string;

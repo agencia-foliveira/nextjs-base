@@ -2,6 +2,7 @@
 import { Alert, Anchor, Button, Group, Text } from '@mantine/core';
 import { IconCrown } from '@tabler/icons-react';
 import { useSession } from 'next-auth/react';
+
 import { useStripeCheckout } from '../services';
 
 export function UpgradeBanner() {
@@ -15,7 +16,7 @@ export function UpgradeBanner() {
     <Alert variant="light" color="yellow" radius="md" icon={<IconCrown size={18} />} mb="md">
       <Group justify="space-between" align="center" wrap="nowrap">
         <div>
-          <Text fw={600}>Desbloqueie o Nexus OS PRO</Text>
+          <Text fw={600}>Desbloqueie o Next Starter PRO</Text>
           <Text size="sm" c="dimmed">
             Recursos avançados de alertas, relatórios e integração completa com Bling.
           </Text>

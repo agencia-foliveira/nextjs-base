@@ -9,7 +9,7 @@ export default function inviteUserTemplate(name: string, link?: string) {
   `;
 
   return wrapEmail({
-    title: 'Você foi convidado para o Nexus OS',
+    title: 'Você foi convidado para o Next Starter',
     accentColor: '#A8872A',
     contentHtml,
     buttonLabel: 'Aceitar convite',

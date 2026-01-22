@@ -17,9 +17,11 @@ import { zod4Resolver } from 'mantine-form-zod-resolver';
 import Link from 'next/link';
 import { signIn } from 'next-auth/react';
 import { useEffect, useState } from 'react';
+
+import { SignUpSchema, useSignUp } from '../../services';
+
 import { GoogleButton } from '@/components/commons/GoogleButton';
 import { useQueryString } from '@/hooks';
-import { SignUpSchema, useSignUp } from '../../services';
 
 export function SignUp() {
   const [loading, setLoading] = useState(false);

@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { signOut } from 'next-auth/react';
 import QRCode from 'qrcode';
 import { useCallback, useEffect, useState } from 'react';
+
 import { use2FAGenerateSecret, use2FAVerify } from '../../services';
 
 interface TwoFactorQRCodeProps {

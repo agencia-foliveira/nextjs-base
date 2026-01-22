@@ -3,6 +3,7 @@ import { Button, Group, Select, Stack, TextInput, Title } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
+
 import { deleteUserAction, updateUserAction } from '@/features/users/actions/user.actions';
 import type { User } from '@/features/users/types/user';
 

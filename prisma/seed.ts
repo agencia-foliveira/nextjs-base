@@ -8,10 +8,9 @@ const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 
 async function tableExists(tableName: string) {
-  const { rows } = await pool.query<{ oid: string | null }>(
-    'SELECT to_regclass($1) as oid',
-    [`public.${tableName}`],
-  );
+  const { rows } = await pool.query<{ oid: string | null }>('SELECT to_regclass($1) as oid', [
+    `public.${tableName}`,
+  ]);
   return Boolean(rows?.[0]?.oid);
 }
 
@@ -47,8 +46,8 @@ async function main() {
   if (!hasUsers) {
     console.error(
       '❌ As tabelas obrigatórias não existem. Execute as migrações antes de rodar o seed:\n' +
-      '   - pnpm postinstall (aplica generate + migrate deploy)\n' +
-      '   - ou: npx prisma migrate deploy (prod) / npx prisma migrate dev (dev)\n',
+        '   - pnpm postinstall (aplica generate + migrate deploy)\n' +
+        '   - ou: npx prisma migrate deploy (prod) / npx prisma migrate dev (dev)\n'
     );
     return;
   }

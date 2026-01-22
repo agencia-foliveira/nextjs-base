@@ -1,5 +1,6 @@
 import { notifications } from '@mantine/notifications';
 import { useMutation, useQuery } from '@tanstack/react-query';
+
 import axiosInstance from '@/lib/api';
 
 export function useVerifyInvitation(token?: string | null) {

@@ -1,5 +1,6 @@
 import bcrypt from 'bcryptjs';
 import { type NextRequest, NextResponse } from 'next/server';
+
 import { type ResetPasswordRequest, ResetPasswordSchema } from '@/features/auth/services';
 import prisma from '@/lib/prisma';
 

@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+
 import { consumeActivationToken } from '@/features/auth/services';
 import prisma from '@/lib/prisma';
 

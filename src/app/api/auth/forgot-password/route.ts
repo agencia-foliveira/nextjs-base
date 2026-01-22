@@ -1,5 +1,7 @@
 import crypto from 'node:crypto';
+
 import { type NextRequest, NextResponse } from 'next/server';
+
 import { type ForgotPasswordRequest, ForgotPasswordSchema } from '@/features/auth/services';
 import { sendEmail } from '@/lib/brevo';
 import { PASSWORD_RESET_TOKEN_BYTES, PASSWORD_RESET_TOKEN_EXPIRY } from '@/lib/constants';

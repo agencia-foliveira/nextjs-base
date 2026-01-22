@@ -1,4 +1,5 @@
 import { serve } from 'inngest/next';
+
 import { inngest } from './client';
 
 // Cada função precisa ter um nome único e um trigger/evento

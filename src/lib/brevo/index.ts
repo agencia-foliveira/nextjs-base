@@ -1,5 +1,6 @@
 import { TransactionalEmailsApi, TransactionalEmailsApiApiKeys } from '@getbrevo/brevo';
 import pino from 'pino';
+
 import criticalAlertTemplate from './templates/critical-alert.template';
 import inviteTemplate from './templates/invite-user.template';
 import paymentConfirmedTemplate from './templates/payment-confirmed.template';

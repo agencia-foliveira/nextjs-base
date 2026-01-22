@@ -1,6 +1,7 @@
 import '@mantine/core/styles.css';
 import '@mantine/notifications/styles.css';
 import { ColorSchemeScript, mantineHtmlProps } from '@mantine/core';
+
 import { APP_DESCRIPTION, APP_HOMEPAGE_URL, APP_LANGUAGE, APP_NAME } from '@/lib/constants';
 import { Providers } from '@/providers';
 

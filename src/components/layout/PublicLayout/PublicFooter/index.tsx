@@ -2,11 +2,12 @@ import { Anchor, Container, Text } from '@mantine/core';
 import Link from 'next/link';
 
 import { Logo } from '../../../commons/Logo';
+
 import classes from './PublicFooter.module.css';
 
 const data = [
   {
-    title: 'Nexus OS',
+    title: 'Next Starter',
     links: [
       { label: 'Preços', link: '/precos' },
       { label: 'Documentação', link: '/manual' },
@@ -54,8 +55,8 @@ export function PublicFooter() {
       </Container>
       <Container className={classes.afterFooter}>
         <Text c="dimmed" size="sm">
-          © {new Date().getFullYear()} Nexus OS. Todos os direitos reservados. ·{' '}
-          <Anchor href="mailto:contato@nexusos.com.br">contato@nexusos.com.br</Anchor>
+          © {new Date().getFullYear()} Next Starter. Todos os direitos reservados. ·{' '}
+          <Anchor href="mailto:contato@nextstarter.com.br">contato@nextstarter.com.br</Anchor>
         </Text>
       </Container>
     </div>

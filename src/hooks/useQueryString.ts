@@ -31,7 +31,7 @@ export function useQueryString() {
   const setQueryParams = (paramsObj: Record<string, string>) => {
     const params = new URLSearchParams(searchParams.toString());
     Object.entries(paramsObj)
-      .filter(([_, value]) => value !== undefined && value !== 'undefined')
+      .filter(([, value]) => value !== undefined && value !== 'undefined')
       .forEach(([key, value]) => {
         if (value) {
           params.set(key, value);

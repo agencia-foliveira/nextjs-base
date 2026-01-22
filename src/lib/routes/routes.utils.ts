@@ -1,8 +1,10 @@
 import type { UserRole } from '@prisma/client';
 import type { Route } from 'next';
-import { getPermissions } from '@/features/auth/services';
+
 import { AUTH_ROUTES, PRIVATE_ROUTES } from './routes.constants';
 import type { RouteObject } from './routes.types';
+
+import { getPermissions } from '@/features/auth/services';
 
 export function getPrivateRoutes() {
   return Object.values(PRIVATE_ROUTES);

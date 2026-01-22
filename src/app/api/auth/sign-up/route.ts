@@ -1,5 +1,6 @@
 import bcrypt from 'bcryptjs';
 import { type NextRequest, NextResponse } from 'next/server';
+
 import {
   createActivationToken,
   type SignUpRequest,

@@ -4,8 +4,10 @@ import { useForm } from '@mantine/form';
 import { zod4Resolver } from 'mantine-form-zod-resolver';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useQueryString } from '@/hooks';
+
 import { ResetPasswordSchema, useResetPassword, useVerifyResetToken } from '../../services';
+
+import { useQueryString } from '@/hooks';
 
 export function ResetPassword() {
   const { getQueryParam } = useQueryString();

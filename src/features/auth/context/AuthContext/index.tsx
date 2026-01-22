@@ -1,6 +1,7 @@
 'use client';
 import { useSession } from 'next-auth/react';
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+
 import { getPermissions, type PermissionPath, type User } from '@/features/auth/services';
 
 type AuthStatusType = 'authenticated' | 'unauthenticated' | 'loading';

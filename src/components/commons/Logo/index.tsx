@@ -8,7 +8,7 @@ interface LogoProps {
 export function Logo({ size = 64 }: LogoProps) {
   return (
     <Link href="/" style={{ textDecoration: 'none' }}>
-      <Image src="/img/logo.png" alt="Nexus OS" width={size} height={size} />
+      <Image src="/img/logo.png" alt="Next Starter" width={size} height={size} />
     </Link>
   );
 }

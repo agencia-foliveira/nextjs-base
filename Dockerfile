@@ -11,7 +11,7 @@ WORKDIR /app
 ENV NODE_ENV=production
 RUN corepack enable && corepack prepare pnpm@10.27.0 --activate
 
-ARG DATABASE_URL=postgresql://user:password@db:5432/nexus_db?schema=public
+ARG DATABASE_URL=postgresql://user:password@db:5432/nextstarter_db?schema=public
 ENV DATABASE_URL=$DATABASE_URL
 
 COPY --from=deps /app/node_modules ./node_modules

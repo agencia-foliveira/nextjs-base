@@ -2,6 +2,7 @@ import { headers } from 'next/headers';
 import { NextResponse } from 'next/server';
 import pino from 'pino';
 import type Stripe from 'stripe';
+
 import prisma from '@/lib/prisma';
 import { stripe } from '@/lib/stripe';
 

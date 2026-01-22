@@ -54,9 +54,7 @@ function AppLayout({ children }) {
 
       {/* Footer */}
       <footer className="bg-white border-t mt-auto">
-        <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-          Footer
-        </div>
+        <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">Footer</div>
       </footer>
     </div>
   );
@@ -66,18 +64,9 @@ function AppLayout({ children }) {
 **AppShell Mantine:**
 
 ```tsx
-import {
-  AppShell,
-  Navbar,
-  Header,
-  Footer,
-  Aside,
-  Text,
-  Button,
-  ScrollArea,
-} from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
-import { IconLogout } from "@tabler/icons-react";
+import { AppShell, Navbar, Header, Footer, Aside, Text, Button, ScrollArea } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
+import { IconLogout } from '@tabler/icons-react';
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -90,12 +79,12 @@ export function AppLayout({ children }: AppLayoutProps) {
     <AppShell
       navbar={{
         width: 256,
-        breakpoint: "sm",
+        breakpoint: 'sm',
         collapsed: { mobile: !opened },
       }}
       aside={{
         width: 256,
-        breakpoint: "sm",
+        breakpoint: 'sm',
       }}
       header={{ height: 64 }}
       footer={{ height: 64 }}
@@ -112,21 +101,9 @@ export function AppLayout({ children }: AppLayoutProps) {
         </div>
       </Header>
 
-      <Navbar
-        width={{ sm: 256 }}
-        p="md"
-        hiddenBreakpoint="sm"
-        hidden={!opened}
-        onHide={toggle}
-      >
+      <Navbar width={{ sm: 256 }} p="md" hiddenBreakpoint="sm" hidden={!opened} onHide={toggle}>
         <Navbar.Section grow component={ScrollArea}>
-          <Button
-            variant="subtle"
-            fullWidth
-            leftSection={<IconGauge size={16} />}
-            c="dark"
-            fz="sm"
-          >
+          <Button variant="subtle" fullWidth leftSection={<IconGauge size={16} />} c="dark" fz="sm">
             Dashboard
           </Button>
         </Navbar.Section>
@@ -216,9 +193,9 @@ import {
   ScrollArea,
   Text,
   Title,
-} from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
-import { IconGauge, IconUser, IconLogout } from "@tabler/icons-react";
+} from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
+import { IconGauge, IconUser, IconLogout } from '@tabler/icons-react';
 ```
 
 ## Dicas Importantes

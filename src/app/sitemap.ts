@@ -1,4 +1,5 @@
 import type { MetadataRoute } from 'next';
+
 import { APP_HOMEPAGE_URL } from '@/lib/constants';
 
 export default function sitemap(): MetadataRoute.Sitemap {

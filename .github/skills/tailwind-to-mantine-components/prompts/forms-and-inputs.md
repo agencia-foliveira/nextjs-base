@@ -18,7 +18,7 @@ description: Conversão de formulários e inputs Tailwind para Mantine
 **Mantine:**
 
 ```tsx
-import { TextInput } from "@mantine/core";
+import { TextInput } from '@mantine/core';
 
 <TextInput placeholder="Nome completo" radius="md" />;
 ```
@@ -37,13 +37,13 @@ import { TextInput } from "@mantine/core";
 **Mantine:**
 
 ```tsx
-import { Select } from "@mantine/core";
+import { Select } from '@mantine/core';
 
 <Select
   placeholder="Selecione..."
   data={[
-    { value: "1", label: "Opção 1" },
-    { value: "2", label: "Opção 2" },
+    { value: '1', label: 'Opção 1' },
+    { value: '2', label: 'Opção 2' },
   ]}
 />;
 ```
@@ -62,7 +62,7 @@ import { Select } from "@mantine/core";
 **Mantine:**
 
 ```tsx
-import { Checkbox } from "@mantine/core";
+import { Checkbox } from '@mantine/core';
 
 <Checkbox label="Aceito os termos" />;
 ```
@@ -72,16 +72,16 @@ import { Checkbox } from "@mantine/core";
 Quando o componente original usa estado de formulário, migre para `@mantine/form`:
 
 ```tsx
-import { useForm } from "@mantine/form";
-import { TextInput, Button, Stack } from "@mantine/core";
+import { useForm } from '@mantine/form';
+import { TextInput, Button, Stack } from '@mantine/core';
 
 function ContactForm() {
   const form = useForm({
-    mode: "uncontrolled",
-    initialValues: { name: "", email: "" },
+    mode: 'uncontrolled',
+    initialValues: { name: '', email: '' },
     validate: {
-      name: (value) => (value.length < 2 ? "Nome muito curto" : null),
-      email: (value) => (/^\S+@\S+$/.test(value) ? null : "Email inválido"),
+      name: (value) => (value.length < 2 ? 'Nome muito curto' : null),
+      email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Email inválido'),
     },
   });
 
@@ -91,14 +91,14 @@ function ContactForm() {
         <TextInput
           label="Nome"
           placeholder="Seu nome"
-          key={form.key("name")}
-          {...form.getInputProps("name")}
+          key={form.key('name')}
+          {...form.getInputProps('name')}
         />
         <TextInput
           label="Email"
           placeholder="email@exemplo.com"
-          key={form.key("email")}
-          {...form.getInputProps("email")}
+          key={form.key('email')}
+          {...form.getInputProps('email')}
         />
         <Button type="submit">Enviar</Button>
       </Stack>
